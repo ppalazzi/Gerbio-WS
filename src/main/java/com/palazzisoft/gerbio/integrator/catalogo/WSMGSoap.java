@@ -66,29 +66,6 @@ public interface WSMGSoap {
     /**
      * 
      * @param cliente
-     * @param fecha
-     * @param password
-     * @param usuario
-     * @return
-     *     returns com.palazzisoft.gerbio.integrator.catalogo.ProductsRequest
-     */
-    @WebMethod(operationName = "GetStockPriceCatalogTime", action = "http://tempuri.org/GetStockPriceCatalogTime")
-    @WebResult(name = "GetStockPriceCatalogTimeResult", targetNamespace = "http://tempuri.org/")
-    @RequestWrapper(localName = "GetStockPriceCatalogTime", targetNamespace = "http://tempuri.org/", className = "com.palazzisoft.gerbio.integrator.catalogo.GetStockPriceCatalogTime")
-    @ResponseWrapper(localName = "GetStockPriceCatalogTimeResponse", targetNamespace = "http://tempuri.org/", className = "com.palazzisoft.gerbio.integrator.catalogo.GetStockPriceCatalogTimeResponse")
-    public ProductsRequest getStockPriceCatalogTime(
-        @WebParam(name = "cliente", targetNamespace = "http://tempuri.org/")
-        String cliente,
-        @WebParam(name = "usuario", targetNamespace = "http://tempuri.org/")
-        String usuario,
-        @WebParam(name = "password", targetNamespace = "http://tempuri.org/")
-        String password,
-        @WebParam(name = "fecha", targetNamespace = "http://tempuri.org/")
-        String fecha);
-
-    /**
-     * 
-     * @param cliente
      * @param password
      * @param usuario
      * @return
