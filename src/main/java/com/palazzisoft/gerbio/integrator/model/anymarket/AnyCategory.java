@@ -1,13 +1,12 @@
-package com.palazzisoft.gerbio.integrator.model;
+package com.palazzisoft.gerbio.integrator.model.anymarket;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Builder
 @Getter @Setter @Data
-public class Category {
+@AllArgsConstructor
+@NoArgsConstructor
+public class AnyCategory {
 
     private Long id;
     private String name;

@@ -13,7 +13,7 @@ import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 @Configuration
-public class ClientConfiguration {
+public class AnyMarketConfiguration {
 
     @Bean
     public WebClient webClient() {
@@ -26,6 +26,7 @@ public class ClientConfiguration {
 
         return WebClient.builder()
                 .clientConnector(new ReactorClientHttpConnector(httpClient))
+                .defaultHeader("gumgatoken","L35024029G1625768667662R1037733922")
                 .baseUrl("http://sandbox-api.anymarket.com.br")
                 .build();
     }

@@ -1,50 +1,44 @@
 package com.palazzisoft.gerbio.integrator.catalogo;
 
-import com.palazzisoft.gerbio.integrator.model.Category;
-import com.palazzisoft.gerbio.integrator.repository.CategoryRepository;
+import com.palazzisoft.gerbio.integrator.model.anymarket.AnyBrand;
+import com.palazzisoft.gerbio.integrator.model.anymarket.AnyCategory;
+import com.palazzisoft.gerbio.integrator.response.CategoryResponse;
+import com.palazzisoft.gerbio.integrator.service.anymarket.BrandService;
+import com.palazzisoft.gerbio.integrator.service.anymarket.CategoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
-
-import java.net.URI;
 
 @SpringBootTest
 @Slf4j
 public class AnyMarketTest {
 
     @Autowired
-    private WebClient webClient;
+    private CategoryService categoryService;
 
     @Autowired
-    private CategoryRepository categoryRepository;
+    private BrandService brandService;
 
-    void testAnyMethod() throws Exception {
-        Category cat = Category.builder().id(1L).name("carlos").definitionPriceScope("123")
-                .path("path")
-                .build();
+    @Test
+    void testCatalog() {
+        CategoryResponse response = categoryService.getCategories();
+        log.info("Respuesta es {} ", response);
 
-        Category responseCat = categoryRepository.addCategory(cat);
+        AnyCategory categoryById = categoryService.getById(763121L);
 
-        String response = webClient.get().uri(URI.create("http://sandbox-api.anymarket.com.br/v2/categories"))
-                .header("gumgaToken", "L35024029G1625768667662R1037733922")
-                .header("Content-Type", "application/json").exchangeToMono(res -> {
-                            if (res.statusCode().equals(HttpStatus.OK)) {
-                                log.info("DI 200");
-                                return res.bodyToMono(String.class);
-                            }
-                            else {
-                                log.error("la cague");
+        log.info("Category traiga correctamente {} ", categoryById);
 
-                                return res.createException()
-                                        .flatMap(Mono::error);
-                            }
-                       }).block();
+    }
 
-       log.info("response", response);
-        log.info("response", responseCat);
+    @Test
+    void testBrands() {
+        AnyBrand brand = AnyBrand.builder().name("Coca Cola").reducedName("Coca").partnerId("12345").build();
+
+        AnyBrand stored = brandService.save(brand);
+
+        AnyBrand retrieved = brandService.getById(stored.getId());
+
+        log.info("BRand is {} ", retrieved);
     }
 }
