@@ -1,5 +1,6 @@
 package com.palazzisoft.gerbio.integrator.model.anymarket;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AnyProduct {
 
     private Long id;
@@ -32,4 +34,5 @@ public class AnyProduct {
     private boolean hasVariations;
     private List<AnyProductCharacteristic> characteristics;
     private List<AnyImage> images;
+    private List<AnySku> skus;
 }

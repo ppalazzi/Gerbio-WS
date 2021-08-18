@@ -1,5 +1,6 @@
 package com.palazzisoft.gerbio.integrator.model.anymarket;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AnySku {
 
     private Long id;
@@ -19,6 +21,6 @@ public class AnySku {
     private double amount;
     private double additionalTime;
     private double price;
-    private double sellPrice;
-    private List<AnyVariationValue> variations;
+    //private double sellPrice;
+    //private List<AnyVariationValue> variations;
 }

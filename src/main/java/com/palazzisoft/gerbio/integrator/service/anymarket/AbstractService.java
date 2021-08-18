@@ -25,7 +25,22 @@ public abstract class AbstractService<T> {
 
     public T save(T t) {
         log.info("Storing {} by with data {}", clazz.getName(), t.toString());
-        return (T) webClient.post().uri(getURLBase()).body(Mono.just(t), clazz).retrieve().bodyToMono(clazz).block();
+        return (T) webClient.post().uri(getURLBase()).body(Mono.just(t), clazz).retrieve().bodyToMono(clazz)
+                .doOnEach(data ->  log.info(data.toString()))
+                .doOnError(error -> log.error(error.toString()))
+                .block();
     }
 
+    public T update(T t, Long id) {
+        log.info("Updating {} with data {} ", clazz.getName(), t.toString());
+        return (T) webClient.put().uri(getURLBase().concat("/") + id).body(Mono.just(t), clazz).retrieve().bodyToMono(clazz)
+                .doOnEach(data ->  log.info(data.toString()))
+                .doOnError(error -> log.error(error.toString()))
+                .block();
+    }
+
+    public T delete(Long id) {
+        log.info("Removing {} with id {}", clazz.getName(), id);
+        return (T) webClient.delete().uri(getURLBase().concat("/") + id).retrieve().bodyToMono(clazz).block();
+    }
 }
