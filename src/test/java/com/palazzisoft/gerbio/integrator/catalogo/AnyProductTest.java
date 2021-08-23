@@ -4,11 +4,17 @@ import com.palazzisoft.gerbio.integrator.model.anymarket.*;
 import com.palazzisoft.gerbio.integrator.service.anymarket.BrandService;
 import com.palazzisoft.gerbio.integrator.service.anymarket.CategoryService;
 import com.palazzisoft.gerbio.integrator.service.anymarket.ProductService;
+import com.palazzisoft.gerbio.integrator.service.anymarket.StockService;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.api.Assertions;
+import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.util.Lists.list;
 import static org.assertj.core.util.Lists.newArrayList;
 
@@ -24,6 +30,9 @@ public class AnyProductTest {
 
     @Autowired
     private BrandService brandService;
+
+    @Autowired
+    private StockService stockService;
 
     @Test
     void testProduct01() {
@@ -130,6 +139,7 @@ public class AnyProductTest {
         impresoraCanon.setDefinitionPriceScope("SKU");
         impresoraCanon.setImages(list(image1));
         impresoraCanon.setPriceFactor(2d);
+
         impresoraCanon.setCalculatedPrice(false);
 
         // second product
@@ -161,5 +171,119 @@ public class AnyProductTest {
 
         log.info(impresoraHP.getTitle());
         log.info(impresoraCanon.getTitle());
+    }
+
+    // este es por precio por coste, hay que terminar de entenderlo bien.
+    @Test
+    void updateProductStock() {
+        AnyProduct impresoraCanon = productService.getById(2274570L);
+
+        AnyStock stock = AnyStock.builder()
+                .id(impresoraCanon.getSkus().get(0).getId())
+                .cost(19366d)
+                .partnerId(impresoraCanon.getSkus().get(0).getPartnerId())
+                .quantity(2)
+                .build();
+
+        List<AnyStock> stocks = stockService.update(Lists.newArrayList(stock));
+
+        assertThat(stock.getCost()).isEqualTo(19366d);
+    }
+
+    @Test
+    void updateProductById() {
+        AnyProduct impresoraCanon = productService.getById(2274570L);
+        AnySku sku = impresoraCanon.getSkus().get(0);
+        sku.setPrice(36800d);
+
+        AnyProduct updated = productService.updateProductSku(sku, impresoraCanon.getId());
+
+        assertThat(updated.getSkus().get(0).getPrice()).isEqualTo(36800d);
+    }
+
+    @Test
+    void updateStock() {
+        AnyProduct impresoraHP = productService.getById(2274569L);
+
+        AnySku sku = impresoraHP.getSkus().get(0);
+        sku.setAmount(3);
+
+        AnyStock stock = AnyStock.builder()
+                .id(sku.getId())
+                .cost(sku.getPrice())
+                .partnerId(sku.getPartnerId())
+                .quantity(78)
+                .build();
+
+        stockService.update(Lists.newArrayList(stock));
+    }
+
+    @Test
+    void updateStockCrossDocking() {
+        AnyProduct impresoraHP = productService.getById(2274569L);
+
+        AnySku sku = impresoraHP.getSkus().get(0);
+        sku.setAmount(4);
+        sku.setAdditionalTime(9);
+
+        AnyProduct updated = productService.updateProductSku(sku, impresoraHP.getId());
+
+        AnyStock stock = AnyStock.builder()
+                .id(sku.getId())
+                .cost(sku.getPrice())
+                .partnerId(sku.getPartnerId())
+                .additionalTime(3.3d)
+                .quantity(4)
+                .build();
+
+        stockService.update(Lists.newArrayList(stock));
+    }
+
+    @Test
+    void updateStockPRiceAndDocking() {
+        AnyProduct impresoraHP = productService.getById(2274569L);
+
+        AnySku sku = impresoraHP.getSkus().get(0);
+
+        AnyStock stock = AnyStock.builder()
+                .id(sku.getId())
+                .cost(sku.getPrice() + 1)
+                .partnerId(sku.getPartnerId())
+                .additionalTime(56)
+                .quantity(2)
+                .build();
+
+        stockService.update(Lists.newArrayList(stock));
+    }
+
+    @Test
+    void backStoToZero() {
+        AnyProduct impresoraCanon = productService.getById(2274570L);
+        AnySku sku = impresoraCanon.getSkus().get(0);
+
+        AnyStock stock = AnyStock.builder()
+                .id(sku.getId())
+                .partnerId(sku.getPartnerId())
+                .quantity(0)
+                .cost(sku.getPrice())
+                .build();
+
+        stockService.update(Lists.newArrayList(stock));
+
+    }
+
+    @Test
+    void addCharacteristicsToProduct() {
+        AnyProduct impresoraCanon = productService.getById(2274570L);
+
+        AnyProductCharacteristic caracteristics = AnyProductCharacteristic.builder()
+                .index(0)
+                .value("Azul")
+                .name("Color")
+                .build();
+
+        impresoraCanon.setCharacteristics(Lists.newArrayList(caracteristics));
+
+        productService.update(impresoraCanon, impresoraCanon.getId());
     }
 }

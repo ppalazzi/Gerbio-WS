@@ -39,6 +39,15 @@ public abstract class AbstractService<T> {
                 .block();
     }
 
+    public T update(T t) {
+        log.info("Updating {} with data {} ", clazz.getName());
+
+        return (T) webClient.put().uri(getURLBase().concat("/")).body(Mono.just(t), clazz).retrieve().bodyToMono(clazz)
+                .doOnEach(data ->  log.info("Updating " + data.toString()))
+                .doOnError(error -> log.error("Error Updating " + error.toString()))
+                .block();
+    }
+
     public T delete(Long id) {
         log.info("Removing {} with id {}", clazz.getName(), id);
         return (T) webClient.delete().uri(getURLBase().concat("/") + id).retrieve().bodyToMono(clazz).block();
