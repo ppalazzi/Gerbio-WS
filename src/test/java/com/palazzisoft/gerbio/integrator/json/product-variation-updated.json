@@ -1,0 +1,100 @@
+{
+  "id": 2279768,
+  "title": "Monitor Samsung - Updated",
+  "description": "Monitor Samsung PRO - Updated",
+  "category": {
+    "id": 764963,
+    "name": "Impresoras",
+    "path": "Impresoras"
+  },
+  "brand": {
+    "id": 222971,
+    "name": "Hewlett Packard",
+    "reducedName": "HP",
+    "partnerId": "HP"
+  },
+  "origin": {
+    "id": 1
+  },
+  "model": "3BNCERD-UPDATED",
+  "warrantyTime": 3,
+  "warrantyText": "3 Años",
+  "height": 1600,
+  "width": 1400,
+  "weight": 400,
+  "length": "",
+  "priceFactor": 2,
+  "calculatedPrice": false,
+  "definitionPriceScope": "SKU",
+  "hasVariations": true,
+  "isProductActive": true,
+  "characteristics": [
+    {
+      "index": "",
+      "name": "Color",
+      "value": "Black"
+    }
+  ],
+  "images": [
+    {
+      "id": 1874716,
+      "index": 1,
+      "main": true,
+      "url": "https://microglobalpromos.com.ar/2021/img/072021/BUNMK1292_2.jpg",
+      "thumbnailUrl": "http://s3-sa-east-1.amazonaws.com/images.anymarket.com.br/35024029./679995A2A71C42EE8DA098DACBD8C04A/thumbnail.jpg",
+      "lowResolutionUrl": "http://s3-sa-east-1.amazonaws.com/images.anymarket.com.br/35024029./679995A2A71C42EE8DA098DACBD8C04A/low_resolution.jpg",
+      "standardUrl": "http://s3-sa-east-1.amazonaws.com/images.anymarket.com.br/35024029./679995A2A71C42EE8DA098DACBD8C04A/standard_resolution.jpg",
+      "originalImage": "http://s3-sa-east-1.amazonaws.com/images.anymarket.com.br/35024029./679995A2A71C42EE8DA098DACBD8C04A/original_image.jpg",
+      "status": "PROCESSED",
+      "standardWidth": 1000,
+      "standardHeight": 1000,
+      "originalWidth": 1200,
+      "originalHeight": 1200
+    }
+  ],
+  "skus": [
+    {
+      "id": 1557015,
+      "title": "Monitor Samsung - 110v",
+      "partnerId": "MNT-SMS-110-111",
+      "price": 5000,
+      "sellPrice": 1,
+      "amount": 3,
+      "additionalTime": "",
+      "variations":
+      {
+        "Voltage" : "110"
+      },
+      "stockLocalId": 6566
+    },
+    {
+      "id": 1557016,
+      "title": "Monitor Samsung - 220v",
+      "partnerId": "MNT-SMS-220-111",
+      "price": 5000,
+      "sellPrice": 1,
+      "amount": 3,
+      "additionalTime": "",
+      "variations":
+      {
+        "Voltage" : "220"
+      },
+      "stockLocalId": 6566
+    },
+    {
+      "id": 1557017,
+      "title": "Monitor Samsung - 440v",
+      "partnerId": "MNT-SMS-440-111",
+      "price": 5000,
+      "sellPrice": 1,
+      "amount": 3,
+      "additionalTime": "",
+      "variations":
+      {
+        "Voltage" : "440"
+      },
+      "stockLocalId": 6566
+    }
+  ],
+  "allowAutomaticSkuMarketplaceCreation": true
+}

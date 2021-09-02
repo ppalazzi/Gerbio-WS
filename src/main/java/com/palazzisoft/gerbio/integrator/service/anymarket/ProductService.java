@@ -13,8 +13,11 @@ public class ProductService extends AbstractService<AnyProduct> {
 
     private final String URL_BASE = "/v2/products";
 
-    public ProductService(WebClient webClient) {
+    private WebClient webClientLocal;
+
+    public ProductService(WebClient webClient, WebClient webClientLocal) {
         super(webClient, AnyProduct.class);
+        this.webClientLocal = webClientLocal;
     }
 
     @Override
@@ -30,4 +33,5 @@ public class ProductService extends AbstractService<AnyProduct> {
                 .doOnError(error -> log.error(error.toString()))
                 .block();
     }
+
 }

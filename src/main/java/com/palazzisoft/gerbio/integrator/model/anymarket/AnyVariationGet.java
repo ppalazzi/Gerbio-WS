@@ -3,6 +3,8 @@ package com.palazzisoft.gerbio.integrator.model.anymarket;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
+import java.util.List;
+
 @Builder
 @Getter
 @Setter
@@ -10,9 +12,12 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class AnyVariationValue {
+public class AnyVariationGet {
 
     private Long id;
-    private String description;
-    private AnyVariationGet type;
+    private String name;
+    private String partnerId;
+    private List<AnyVariationValue> values;
+    private boolean visualVariation;
+
 }

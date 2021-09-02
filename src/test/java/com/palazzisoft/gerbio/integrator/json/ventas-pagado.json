@@ -1,0 +1,41 @@
+{
+  "createdAt": "2021-08-26T18:06:03Z",
+  "status": "PAID_WAITING_SHIP",
+  "marketPlaceStatus": "PAID_WAITING_SHIP",
+  "marketPlace": "ECOMMERCE",
+  "marketPlaceId": "4",
+  "marketPlaceShipmentStatus": "SEND",
+  "transmissionStatus": "OK",
+  "discount": 0,
+  "freight": 0,
+  "gross": 84000,
+  "total": 84000,
+  "payments": [
+    {
+      "method": "Dinheiro",
+      "status": "Pago",
+      "value": 0
+    }
+  ],
+  "buyer": {
+    "id": "123498",
+    "name": "USER TESTE",
+    "email": "USER@tes.com.br",
+    "document": "31882553144",
+    "documentType": "CPF",
+    "phone": "4498785432"
+  },
+  "items": [
+    {
+      "sku": {
+        "partnerId": "PN-YMH-115-1"
+      },
+      "amount": 1,
+      "unit": 1,
+      "price": 84000,
+      "discount": 0,
+      "gross": 0,
+      "total": 84000
+    }
+  ]
+}

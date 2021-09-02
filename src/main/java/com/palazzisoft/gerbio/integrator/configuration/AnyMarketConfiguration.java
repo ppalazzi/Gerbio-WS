@@ -36,6 +36,23 @@ public class AnyMarketConfiguration {
                 .build();
     }
 
+    @Bean
+    public WebClient webClientLocal() {
+        HttpClient httpClient = HttpClient.create()
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)
+                .responseTimeout(Duration.ofMillis(5000))
+                .doOnConnected(conn ->
+                        conn.addHandlerLast(new ReadTimeoutHandler(5000, TimeUnit.MILLISECONDS))
+                                .addHandlerLast(new WriteTimeoutHandler(5000, TimeUnit.MILLISECONDS)));
+
+        return WebClient.builder()
+                .clientConnector(new ReactorClientHttpConnector(httpClient))
+                .defaultHeader("gumgatoken","L35024029G1625768667662R1037733922")
+                .baseUrl("http://localhost:8089/order")
+                .filter(logRequest())
+                .build();
+    }
+
     private static ExchangeFilterFunction logRequest() {
         return ExchangeFilterFunction.ofRequestProcessor(clientRequest -> {
             log.info("Request: {} {}", clientRequest.method(), clientRequest.url());

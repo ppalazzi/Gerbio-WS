@@ -1,12 +1,8 @@
 package com.palazzisoft.gerbio.integrator.catalogo;
 
 import com.palazzisoft.gerbio.integrator.model.anymarket.*;
-import com.palazzisoft.gerbio.integrator.service.anymarket.BrandService;
-import com.palazzisoft.gerbio.integrator.service.anymarket.CategoryService;
-import com.palazzisoft.gerbio.integrator.service.anymarket.ProductService;
-import com.palazzisoft.gerbio.integrator.service.anymarket.StockService;
+import com.palazzisoft.gerbio.integrator.service.anymarket.*;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +29,9 @@ public class AnyProductTest {
 
     @Autowired
     private StockService stockService;
+
+    @Autowired
+    private VariationService variationService;
 
     @Test
     void testProduct01() {
@@ -285,5 +284,194 @@ public class AnyProductTest {
         impresoraCanon.setCharacteristics(Lists.newArrayList(caracteristics));
 
         productService.update(impresoraCanon, impresoraCanon.getId());
+    }
+
+    @Test
+    void createNewProductToBePublished() {
+        AnyCategory category = categoryService.getById(764963L);
+        AnyBrand brand = brandService.getById(222971L);
+        AnyOrigin origin = AnyOrigin.builder().id(1L).build();
+
+        // first product
+        AnyImage image = AnyImage.builder()
+                .originalImage("https://microglobalpromos.com.ar/2021/img/072021/BUNMK1292_1.jpg")
+                .url("https://microglobalpromos.com.ar/2021/img/072021/BUNMK1292_1.jpg")
+                .main(true)
+                .build();
+
+        AnySku sku = AnySku.builder()
+                .price(84000)
+                .amount(5)
+                .title("Piano Yamaha P115 - SKU")
+                .partnerId("PN-YMH-115-1")
+                .build();
+
+        AnyProduct piano = AnyProduct.builder()
+                .category(category)
+                .brand(brand)
+                .description("Yamaha P115 imita al Grand Piano")
+                .title("Piano Yamaha P115")
+                .origin(origin)
+                .model("P115")
+                .warrantyText("5 Año")
+                .warrantyTime(5)
+                .height(600d)
+                .width(400d)
+                .weight(1200d)
+                .definitionPriceScope("SKU")
+                .images(newArrayList(image))
+                .priceFactor(1d)
+                .calculatedPrice(false)
+                .skus(newArrayList(sku))
+                .build();
+
+        piano.setCharacteristics(list(AnyProductCharacteristic.builder()
+                .name("Color")
+                .value("Black")
+                .index(0)
+                .build()));
+
+        productService.save(piano);
+    }
+
+    @Test
+    void productWithVariations() {
+        AnyCategory category = categoryService.getById(764963L);
+        AnyBrand brand = brandService.getById(222971L);
+        AnyOrigin origin = AnyOrigin.builder().id(1L).build();
+
+        AnyVariationGet variation = variationService.getById(32073L);
+
+        // first product
+        AnyImage image = AnyImage.builder()
+                .originalImage("https://microglobalpromos.com.ar/2021/img/072021/BUNMK1292_1.jpg")
+                .url("https://microglobalpromos.com.ar/2021/img/072021/BUNMK1292_1.jpg")
+                .main(true)
+                .build();
+
+        AnySku sku110 = AnySku.builder()
+                .price(5000d)
+                .amount(3)
+                .title("Monitor Samsung - 110v")
+                .partnerId("MNT-SMS-110-111")
+                //.variations(Variation.builder().Voltage("110").build())
+                .sellPrice(1d)
+                .build();
+
+        AnySku sku220 = AnySku.builder()
+                .price(5000d)
+                .amount(3)
+                .title("Monitor Samsung - 220v")
+                .partnerId("MNT-SMS-220-111")
+                .sellPrice(1d)
+                //.variations(Variation.builder().Voltage("210").build())
+                .build();
+
+        AnySku sku440 = AnySku.builder()
+                .price(5000d)
+                .amount(3)
+                .title("Monitor Samsung - 440v")
+                .partnerId("MNT-SMS-440-111")
+                .sellPrice(1d)
+                //.variations(Variation.builder().Voltage("440").build())
+                .build();
+
+        AnyProduct monitor = AnyProduct.builder()
+                .category(category)
+                .brand(brand)
+                .description("Monitor Samsung PRO")
+                .title("Monitor Samsung")
+                .origin(origin)
+                .model("3BNCERD")
+                .warrantyText("5 Año")
+                .warrantyTime(5)
+                .height(600d)
+                .width(400d)
+                .weight(1200d)
+                .definitionPriceScope("SKU")
+                .images(newArrayList(image))
+                .priceFactor(1d)
+                .calculatedPrice(false)
+                .hasVariations(true)
+                .skus(newArrayList(sku110, sku220, sku440))
+                .build();
+
+        monitor.setCharacteristics(list(AnyProductCharacteristic.builder()
+                .name("Color")
+                .value("Black")
+                .index(0)
+                .build()));
+
+        //productService.save(monitor);
+
+        // producto 2
+
+        AnySku sku110b = AnySku.builder()
+                .price(1000d)
+                .amount(2)
+                .title("Fonola Retro - 110v")
+                .partnerId("FNL-110-111")
+                //.variations(Variation.builder().Voltage("110").build())
+                .sellPrice(1d)
+                .build();
+
+        AnySku sku220b = AnySku.builder()
+                .price(1000d)
+                .amount(2)
+                .title("Fonola Retro - 220v")
+                .partnerId("FNL-220-111")
+                .sellPrice(1d)
+                //.variations(Variation.builder().Voltage("210").build())
+                .build();
+
+        AnySku sku440b = AnySku.builder()
+                .price(5000d)
+                .amount(3)
+                .title("Fonola Retro - 440v")
+                .partnerId("FNL-440-111")
+                .sellPrice(1d)
+                //.variations(Variation.builder().Voltage("440").build())
+                .build();
+
+        AnyProduct fonola = AnyProduct.builder()
+                .category(category)
+                .brand(brand)
+                .description("Fonola ")
+                .title("Fonola Retro")
+                .origin(origin)
+                .model("3BNCERD-852147")
+                .warrantyText("3 Año")
+                .warrantyTime(3)
+                .height(600d)
+                .width(400d)
+                .weight(1200d)
+                .definitionPriceScope("SKU")
+                .images(newArrayList(image))
+                .priceFactor(1d)
+                .hasVariations(true)
+                .calculatedPrice(false)
+                .skus(newArrayList(sku110b, sku220b, sku440b))
+                .build();
+
+        productService.save(fonola);
+    }
+
+    @Test
+    void testUpdateProduct1() {
+        AnyProduct product = productService.getById(2279768L);
+
+        product.setTitle("Monitor Samsung - Updated");
+        product.setDescription("Monitor Samsung PRO - Updated");
+        product.setWeight(3d);
+        product.setPriceFactor(2d);
+        product.setHeight(45d);
+        product.setWarrantyTime(8);
+        product.setWarrantyText("8 Años");
+        product.setModel("3BNCERD-UPDATED");
+
+        product.getCharacteristics().add(AnyProductCharacteristic.builder().index(1).name("Size").value("Huge").build());
+        product.getImages().get(0).setUrl("https://microglobalpromos.com.ar/2021/img/072021/BUNMK1292_2.jpg");
+
+        productService.update(product, product.getId());
     }
 }

@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class CallbackController {
 
     @PostMapping
-    public ResponseEntity<String> get(@RequestBody Object object) {
+    public ResponseEntity<String> get(@RequestBody String object) {
         log.info("Recibo {}", object);
-        return ResponseEntity.ok(object.toString());
+        return ResponseEntity.ok(object);
     }
 }
 

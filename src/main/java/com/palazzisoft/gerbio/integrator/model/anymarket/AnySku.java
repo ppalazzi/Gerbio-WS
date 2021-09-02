@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.util.List;
 
+
 @Builder
 @Getter
 @Setter
@@ -21,6 +22,8 @@ public class AnySku {
     private double amount;
     private double additionalTime;
     private double price;
-    //private double sellPrice;
+    private double sellPrice;
     //private List<AnyVariationValue> variations;
+    private List<Variation> variations;
+
 }

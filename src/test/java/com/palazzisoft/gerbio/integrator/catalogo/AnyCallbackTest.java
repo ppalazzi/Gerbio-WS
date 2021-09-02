@@ -31,10 +31,10 @@ public class AnyCallbackTest {
 
     @Test
     void updateCallback() {
-        AnyCallback callback = callbackService.getById(6524L);
+        AnyCallback callback = callbackService.getById(null);
         callback.setUrl("3.144.79.37:8089");
 
-        callbackService.update(null, callback.getId());
+        callbackService.update(callback, callback.getId());
     }
 
     @Test

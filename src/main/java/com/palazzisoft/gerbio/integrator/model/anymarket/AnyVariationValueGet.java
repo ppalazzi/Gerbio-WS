@@ -10,9 +10,10 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class AnyVariationValue {
+public class AnyVariationValueGet {
 
     private Long id;
     private String description;
-    private AnyVariationGet type;
+    private String partnerId;
+
 }
