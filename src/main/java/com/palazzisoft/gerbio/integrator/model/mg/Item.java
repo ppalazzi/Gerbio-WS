@@ -20,4 +20,5 @@ public class Item {
     private String estado;
     private Description description;
     private List<TechnicalSpec> technicalSpecList;
+    private List<String> picturesUrls;
 }

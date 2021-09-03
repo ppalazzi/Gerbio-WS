@@ -5,6 +5,7 @@ import com.palazzisoft.gerbio.integrator.catalogo.ProductsRequest;
 import com.palazzisoft.gerbio.integrator.catalogo.WSMG;
 import com.palazzisoft.gerbio.integrator.model.mg.Description;
 import com.palazzisoft.gerbio.integrator.model.mg.Item;
+import com.palazzisoft.gerbio.integrator.model.mg.TechnicalSpec;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -113,20 +114,32 @@ public class MGWebService {
                     item.setDescription(description);
                 }
 
-/*
-                //String uid = elem.getAttribute("Articulo");
-                //item.setArticulo(uid);
-                Node node2 = elem.getElementsByTagName("lastname").item(0);
-                String lname = node2.getTextContent();
+                Node picturesNode = elem.getElementsByTagName("Pictures").item(0);
+                if (nonNull(picturesNode)){
+                    List<String> urls = new ArrayList<>();
+                    for (int j = 0; j < picturesNode.getChildNodes().getLength(); j++){
+                        if(nonNull(picturesNode.getChildNodes().item(j))){
+                            Node pictureNode = picturesNode.getChildNodes().item(j);
+                            urls.add(pictureNode.getAttributes().getNamedItem("url").getNodeValue());
+                        }
+                    }
+                    item.setPicturesUrls(urls);
+                }
 
-                Node node3 = elem.getElementsByTagName("occupation").item(0);
-                String occup = node3.getTextContent();
-
-                System.out.printf("User id: %s%n", uid);
-                System.out.printf("First name: %s%n", fname);
-                System.out.printf("Last name: %s%n", lname);
-                System.out.printf("Occupation: %s%n", occup);
- */
+                Node detailsNode = elem.getElementsByTagName("Details").item(0);
+                if (nonNull(detailsNode)){
+                    List<TechnicalSpec> technicalSpecs = new ArrayList<>();
+                    NodeList especificaciones = detailsNode.getFirstChild().getFirstChild().getChildNodes();
+                    for (int k = 0; k < especificaciones.getLength(); k ++) {
+                        TechnicalSpec technicalSpec = new TechnicalSpec();
+                        technicalSpec.setNombre(especificaciones.item(k).getAttributes().item(0).getNodeValue());
+                        if (especificaciones.item(k).getFirstChild().getFirstChild() != null) {
+                            technicalSpec.setDescripcion(especificaciones.item(k).getFirstChild().getFirstChild().getNodeValue());
+                        }
+                        technicalSpecs.add(technicalSpec);
+                    }
+                    item.setTechnicalSpecList(technicalSpecs);
+                }
             }
 
             items.add(item);
