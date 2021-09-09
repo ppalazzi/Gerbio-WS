@@ -74,8 +74,6 @@ public class MGWebService {
 
             Node nNode = nodeList.item(i);
 
-            log.info("Current Element " + nNode.getNodeName());
-
             if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 
                 Element elem = (Element) nNode;
