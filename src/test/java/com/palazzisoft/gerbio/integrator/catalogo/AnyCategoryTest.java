@@ -2,11 +2,14 @@ package com.palazzisoft.gerbio.integrator.catalogo;
 
 
 import com.palazzisoft.gerbio.integrator.model.anymarket.AnyCategory;
+import com.palazzisoft.gerbio.integrator.response.CategoryResponse;
 import com.palazzisoft.gerbio.integrator.service.anymarket.CategoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.List;
 
 @SpringBootTest
 @Slf4j
@@ -127,5 +130,11 @@ public class AnyCategoryTest {
 
         AnyCategory tv = categoryService.getById(764965L);
         AnyCategory response = categoryService.delete(tv.getId());
+    }
+
+    @Test
+    void testAllCategories() {
+        CategoryResponse categories = categoryService.getCategories();
+        log.info(categories.toString());
     }
 }
