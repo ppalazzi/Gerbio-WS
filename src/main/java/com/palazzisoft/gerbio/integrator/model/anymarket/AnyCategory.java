@@ -3,10 +3,7 @@ package com.palazzisoft.gerbio.integrator.model.anymarket;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Builder
 @Getter @Setter @Data
@@ -17,10 +14,10 @@ import javax.persistence.ManyToOne;
 public class AnyCategory {
 
     @Id
-    @GeneratedValue
     private Long id;
     private String name;
 
+    @JoinColumn(name = "id", insertable = false, updatable = false)
     @ManyToOne
     private AnyCategory parent;
 

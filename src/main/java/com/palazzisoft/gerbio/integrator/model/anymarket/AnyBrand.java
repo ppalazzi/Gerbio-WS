@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Builder
@@ -18,7 +17,6 @@ import javax.persistence.Id;
 public class AnyBrand {
 
     @Id
-    @GeneratedValue
     private Long id;
     private String name;
     private String reducedName;

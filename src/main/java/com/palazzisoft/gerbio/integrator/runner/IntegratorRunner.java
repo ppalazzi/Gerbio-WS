@@ -1,6 +1,5 @@
 package com.palazzisoft.gerbio.integrator.runner;
 
-import com.palazzisoft.gerbio.integrator.model.anymarket.AnyBrand;
 import com.palazzisoft.gerbio.integrator.response.BrandResponse;
 import com.palazzisoft.gerbio.integrator.response.CategoryResponse;
 import com.palazzisoft.gerbio.integrator.service.anymarket.BrandService;
@@ -28,6 +27,8 @@ public class IntegratorRunner implements ApplicationRunner {
         log.info("Initializing Gerbio Integrator App");
 
         BrandResponse brands = brandService.getBrands();
+        brandService.saveBrands(brands.getContent());
         CategoryResponse categoryResponse = categoryService.getCategories();
+        categoryService.saveCategories(categoryResponse.getContent());
     }
 }

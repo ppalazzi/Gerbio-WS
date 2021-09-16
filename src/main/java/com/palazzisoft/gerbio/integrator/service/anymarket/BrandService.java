@@ -1,6 +1,7 @@
 package com.palazzisoft.gerbio.integrator.service.anymarket;
 
 import com.palazzisoft.gerbio.integrator.model.anymarket.AnyBrand;
+import com.palazzisoft.gerbio.integrator.model.anymarket.AnyCategory;
 import com.palazzisoft.gerbio.integrator.repository.BrandRepository;
 import com.palazzisoft.gerbio.integrator.response.BrandResponse;
 import com.palazzisoft.gerbio.integrator.response.CategoryResponse;
@@ -10,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @Service
 @Slf4j
@@ -48,4 +51,11 @@ public class BrandService extends AbstractService<AnyBrand> {
 
         return response.block();
     }
+
+    public void saveBrands(List<AnyBrand> anyBrandList) {
+        for (AnyBrand anyBrand : anyBrandList) {
+            brandRepository.save(anyBrand);
+        }
+    }
+
 }
