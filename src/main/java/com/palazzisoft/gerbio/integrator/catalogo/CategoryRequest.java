@@ -7,9 +7,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for CategoryRequest complex type.
+ * <p>Clase Java para CategoryRequest complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
  * 
  * <pre>
  * &lt;complexType name="CategoryRequest"&gt;
@@ -40,7 +40,7 @@ public class CategoryRequest {
     protected ArrayOfCategory listCategories;
 
     /**
-     * Gets the value of the result property.
+     * Obtiene el valor de la propiedad result.
      * 
      */
     public int getResult() {
@@ -48,7 +48,7 @@ public class CategoryRequest {
     }
 
     /**
-     * Sets the value of the result property.
+     * Define el valor de la propiedad result.
      * 
      */
     public void setResult(int value) {
@@ -56,7 +56,7 @@ public class CategoryRequest {
     }
 
     /**
-     * Gets the value of the message property.
+     * Obtiene el valor de la propiedad message.
      * 
      * @return
      *     possible object is
@@ -68,7 +68,7 @@ public class CategoryRequest {
     }
 
     /**
-     * Sets the value of the message property.
+     * Define el valor de la propiedad message.
      * 
      * @param value
      *     allowed object is
@@ -80,7 +80,7 @@ public class CategoryRequest {
     }
 
     /**
-     * Gets the value of the listCategories property.
+     * Obtiene el valor de la propiedad listCategories.
      * 
      * @return
      *     possible object is
@@ -92,7 +92,7 @@ public class CategoryRequest {
     }
 
     /**
-     * Sets the value of the listCategories property.
+     * Define el valor de la propiedad listCategories.
      * 
      * @param value
      *     allowed object is

@@ -1,39 +1,36 @@
 package com.palazzisoft.gerbio.integrator.mapping;
 
-import com.palazzisoft.gerbio.integrator.model.anymarket.AnyImage;
-import com.palazzisoft.gerbio.integrator.model.anymarket.AnyProduct;
-import com.palazzisoft.gerbio.integrator.model.anymarket.AnyProductCharacteristic;
-import com.palazzisoft.gerbio.integrator.model.anymarket.AnySku;
+import com.palazzisoft.gerbio.integrator.model.anymarket.*;
 import com.palazzisoft.gerbio.integrator.model.mg.Item;
 import com.palazzisoft.gerbio.integrator.model.mg.TechnicalSpec;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
+
+import static java.util.Objects.nonNull;
 
 public class ItemToAnyProductMapper {
 
     public AnyProduct mapItemToAnyProduct (AnyProduct anyProduct, Item item) {
         List<AnyImage> anyImages = new ArrayList<>();
         List<AnyProductCharacteristic> anyProductCharacteristics = new ArrayList<>();
-        List<AnySku> anySkus = new ArrayList<>();
-        AnySku anySku;
 
         anyProduct.setTitle(item.getDescription().getShort_());
         anyProduct.setDefinitionPriceScope("SKU");
         anyProduct.setCalculatedPrice(false);
 
-        anySku = AnySku.builder()
-                .price(anyProduct.getPriceFactor())
-                .amount(1)
-                .title("SKU-" + item.getPartNumber())
-                .partnerId(item.getPartNumber())
-                .build();
+        AnySku anySku = anyProduct.getSkus().get(0);
+        anySku.setPrice(anyProduct.getPriceFactor());
+        anySku.setSellPrice(anyProduct.getPriceFactor());
+        anyProduct.setPriceFactor(1d);
+        anySku.setTitle(item.getDescription().getShort_());
+        anySku.setAmount(1d);
 
-        anySkus.add(anySku);
-        anyProduct.setSkus(anySkus);
+        anyProduct.setOrigin(AnyOrigin.builder().id(1L).build());
 
         if(item.getPicturesUrls() != null && !item.getPicturesUrls().isEmpty()){
             int index = 0;
@@ -52,13 +49,23 @@ public class ItemToAnyProductMapper {
         }
 
         if (item.getTechnicalSpecList() != null && !item.getTechnicalSpecList().isEmpty()){
+            int i = 0;
             for (TechnicalSpec technicalSpec : item.getTechnicalSpecList()){
-                AnyProductCharacteristic anyProductCharacteristic = AnyProductCharacteristic.builder()
-                        .name(technicalSpec.getNombre())
-                        .value(technicalSpec.getDescripcion())
-                        .build();
+                if (nonNull(technicalSpec.getNombre()) && nonNull(technicalSpec.getDescripcion())) {
+                    final String name = technicalSpec.getNombre().length() < 255 ? technicalSpec.getNombre() :
+                            technicalSpec.getNombre().substring(0, 255);
 
-                anyProductCharacteristics.add(anyProductCharacteristic);
+                    final String value = technicalSpec.getDescripcion().length() < 255 ? technicalSpec.getDescripcion() :
+                            technicalSpec.getDescripcion().substring(0, 255);
+                    AnyProductCharacteristic anyProductCharacteristic = AnyProductCharacteristic.builder()
+                            .name(name)
+                            .value(value)
+                            .index(i)
+                            .build();
+
+                    anyProductCharacteristics.add(anyProductCharacteristic);
+                    i++;
+                }
             }
             anyProduct.setCharacteristics(anyProductCharacteristics);
 
@@ -104,19 +111,30 @@ public class ItemToAnyProductMapper {
             Optional<TechnicalSpec> heightOptional = item.getTechnicalSpecList().stream()
                     .filter(altoPredicate.or(alturaPredicate)).findFirst();
             heightOptional.ifPresent(technicalSpec -> anyProduct.setHeight(convertMeasure(technicalSpec.getDescripcion())));
+            if (heightOptional.isEmpty()) {
+                anyProduct.setHeight(1d);
+            }
 
             Optional<TechnicalSpec> widthOptional = item.getTechnicalSpecList().stream()
                     .filter(anchoPredicate.or(anchuraPredicate)).findFirst();
             widthOptional.ifPresent(technicalSpec -> anyProduct.setHeight(convertMeasure(technicalSpec.getDescripcion())));
+            if (widthOptional.isEmpty()) {
+                anyProduct.setWidth(1d);
+            }
 
             Optional<TechnicalSpec> lengthOptional = item.getTechnicalSpecList().stream()
                     .filter(largoPredicate.or(longitudPredicate)).findFirst();
             lengthOptional.ifPresent(technicalSpec -> anyProduct.setHeight(convertMeasure(technicalSpec.getDescripcion())));
+            if (lengthOptional.isEmpty()) {
+                anyProduct.setLength(1d);
+            }
 
             Optional<TechnicalSpec> warrantyOptional = item.getTechnicalSpecList().stream()
                     .filter(technicalSpec -> technicalSpec.getNombre().equals("Garantia")).findFirst();
             warrantyOptional.ifPresent(technicalSpec -> anyProduct.setWarrantyText(technicalSpec.getDescripcion()));
-
+            if (warrantyOptional.isEmpty()) {
+                anyProduct.setWarrantyTime(1);
+            }
         }
 
         return anyProduct;

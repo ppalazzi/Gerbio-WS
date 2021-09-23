@@ -7,9 +7,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for ProductsRequest complex type.
+ * <p>Clase Java para ProductsRequest complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
  * 
  * <pre>
  * &lt;complexType name="ProductsRequest"&gt;
@@ -43,7 +43,7 @@ public class ProductsRequest {
     protected ArrayOfProduct listProducts;
 
     /**
-     * Gets the value of the result property.
+     * Obtiene el valor de la propiedad result.
      * 
      */
     public int getResult() {
@@ -51,7 +51,7 @@ public class ProductsRequest {
     }
 
     /**
-     * Sets the value of the result property.
+     * Define el valor de la propiedad result.
      * 
      */
     public void setResult(int value) {
@@ -59,7 +59,7 @@ public class ProductsRequest {
     }
 
     /**
-     * Gets the value of the message property.
+     * Obtiene el valor de la propiedad message.
      * 
      * @return
      *     possible object is
@@ -71,7 +71,7 @@ public class ProductsRequest {
     }
 
     /**
-     * Sets the value of the message property.
+     * Define el valor de la propiedad message.
      * 
      * @param value
      *     allowed object is
@@ -83,7 +83,7 @@ public class ProductsRequest {
     }
 
     /**
-     * Gets the value of the originDate property.
+     * Obtiene el valor de la propiedad originDate.
      * 
      * @return
      *     possible object is
@@ -95,7 +95,7 @@ public class ProductsRequest {
     }
 
     /**
-     * Sets the value of the originDate property.
+     * Define el valor de la propiedad originDate.
      * 
      * @param value
      *     allowed object is
@@ -107,7 +107,7 @@ public class ProductsRequest {
     }
 
     /**
-     * Gets the value of the listProducts property.
+     * Obtiene el valor de la propiedad listProducts.
      * 
      * @return
      *     possible object is
@@ -119,7 +119,7 @@ public class ProductsRequest {
     }
 
     /**
-     * Sets the value of the listProducts property.
+     * Define el valor de la propiedad listProducts.
      * 
      * @param value
      *     allowed object is

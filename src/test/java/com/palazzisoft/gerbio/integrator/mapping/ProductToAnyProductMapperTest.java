@@ -6,19 +6,17 @@ import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ProductToAnyProductMapperTest {
-    MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
+
+    @Autowired
+    private MapperFacade mapper;
 
     @Test
     public void testMGProductToAnyProductMapper() {
-        MapperFacade mapper = mapperFactory.getMapperFacade();
-
-        ProductToAnyProductMapper productToAnyProductMapper = new ProductToAnyProductMapper();
-        productToAnyProductMapper.configure(mapperFactory);
-
         Product mgProduct = buildMGProduct();
         AnyProduct anyProduct = mapper.map(mgProduct, AnyProduct.class);
 

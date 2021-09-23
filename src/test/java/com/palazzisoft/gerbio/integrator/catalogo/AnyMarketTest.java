@@ -13,6 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
 import static org.assertj.core.util.Lists.newArrayList;
 
 @SpringBootTest
@@ -30,7 +32,7 @@ public class AnyMarketTest {
 
     @Test
     void testCatalog() {
-        CategoryResponse response = categoryService.getCategories();
+        List<AnyCategory> response = categoryService.getAll();
         log.info("Respuesta es {} ", response);
 
         AnyCategory categoryById = categoryService.getById(763121L);

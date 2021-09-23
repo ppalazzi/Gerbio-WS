@@ -1,8 +1,6 @@
 package com.palazzisoft.gerbio.integrator.service.mg;
 
-import com.palazzisoft.gerbio.integrator.catalogo.ContentRequest;
-import com.palazzisoft.gerbio.integrator.catalogo.ProductsRequest;
-import com.palazzisoft.gerbio.integrator.catalogo.WSMG;
+import com.palazzisoft.gerbio.integrator.catalogo.*;
 import com.palazzisoft.gerbio.integrator.model.mg.Description;
 import com.palazzisoft.gerbio.integrator.model.mg.Item;
 import com.palazzisoft.gerbio.integrator.model.mg.TechnicalSpec;
@@ -10,23 +8,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import static java.util.Objects.nonNull;
 
@@ -54,8 +44,15 @@ public class MGWebService {
         return wsmg.getWSMGSoap().getCatalog(clientId, user, password);
     }
 
-    public List<Item> getContenido()
-            throws ParserConfigurationException, IOException, SAXException {
+    public BrandRequest getBrands() {
+        return wsmg.getWSMGSoap().getBrands(clientId, user, password);
+    }
+
+    public CategoryRequest getCategories() {
+        return wsmg.getWSMGSoap().getCategories(clientId, user, password);
+    }
+
+    public List<Item> getContenido() {
         log.info("Trayendo al Contenido desde MSMG");
 
         ContentRequest request = wsmg.getWSMGSoap().getXMLContenido(clientId, user, password);
@@ -66,7 +63,7 @@ public class MGWebService {
         return transformContentToObject(itemsNodes);
     }
 
-    private List<Item> transformContentToObject(NodeList nodeList) throws ParserConfigurationException, IOException, SAXException {
+    private List<Item> transformContentToObject(NodeList nodeList)  {
         List<Item> items = new ArrayList<>();
 
         for (int i = 0; i < nodeList.getLength(); i++) {

@@ -7,9 +7,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for Error complex type.
+ * <p>Clase Java para Error complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
  * 
  * <pre>
  * &lt;complexType name="Error"&gt;
@@ -37,7 +37,7 @@ public class Error {
     protected String error;
 
     /**
-     * Gets the value of the codError property.
+     * Obtiene el valor de la propiedad codError.
      * 
      */
     public int getCodError() {
@@ -45,7 +45,7 @@ public class Error {
     }
 
     /**
-     * Sets the value of the codError property.
+     * Define el valor de la propiedad codError.
      * 
      */
     public void setCodError(int value) {
@@ -53,7 +53,7 @@ public class Error {
     }
 
     /**
-     * Gets the value of the error property.
+     * Obtiene el valor de la propiedad error.
      * 
      * @return
      *     possible object is
@@ -65,7 +65,7 @@ public class Error {
     }
 
     /**
-     * Sets the value of the error property.
+     * Define el valor de la propiedad error.
      * 
      * @param value
      *     allowed object is

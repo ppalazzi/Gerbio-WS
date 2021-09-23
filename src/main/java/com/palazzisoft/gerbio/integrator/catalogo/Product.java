@@ -8,9 +8,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for Product complex type.
+ * <p>Clase Java para Product complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
  * 
  * <pre>
  * &lt;complexType name="Product"&gt;
@@ -70,7 +70,7 @@ public class Product {
     protected String bundle;
 
     /**
-     * Gets the value of the partNumber property.
+     * Obtiene el valor de la propiedad partNumber.
      * 
      * @return
      *     possible object is
@@ -82,7 +82,7 @@ public class Product {
     }
 
     /**
-     * Sets the value of the partNumber property.
+     * Define el valor de la propiedad partNumber.
      * 
      * @param value
      *     allowed object is
@@ -94,7 +94,7 @@ public class Product {
     }
 
     /**
-     * Gets the value of the descripcion property.
+     * Obtiene el valor de la propiedad descripcion.
      * 
      * @return
      *     possible object is
@@ -106,7 +106,7 @@ public class Product {
     }
 
     /**
-     * Sets the value of the descripcion property.
+     * Define el valor de la propiedad descripcion.
      * 
      * @param value
      *     allowed object is
@@ -118,7 +118,7 @@ public class Product {
     }
 
     /**
-     * Gets the value of the precio property.
+     * Obtiene el valor de la propiedad precio.
      * 
      */
     public double getPrecio() {
@@ -126,7 +126,7 @@ public class Product {
     }
 
     /**
-     * Sets the value of the precio property.
+     * Define el valor de la propiedad precio.
      * 
      */
     public void setPrecio(double value) {
@@ -134,7 +134,7 @@ public class Product {
     }
 
     /**
-     * Gets the value of the stock property.
+     * Obtiene el valor de la propiedad stock.
      * 
      */
     public int getStock() {
@@ -142,7 +142,7 @@ public class Product {
     }
 
     /**
-     * Sets the value of the stock property.
+     * Define el valor de la propiedad stock.
      * 
      */
     public void setStock(int value) {
@@ -150,7 +150,7 @@ public class Product {
     }
 
     /**
-     * Gets the value of the ivaPct property.
+     * Obtiene el valor de la propiedad ivaPct.
      * 
      */
     public float getIvaPct() {
@@ -158,7 +158,7 @@ public class Product {
     }
 
     /**
-     * Sets the value of the ivaPct property.
+     * Define el valor de la propiedad ivaPct.
      * 
      */
     public void setIvaPct(float value) {
@@ -166,7 +166,7 @@ public class Product {
     }
 
     /**
-     * Gets the value of the partNumberOri property.
+     * Obtiene el valor de la propiedad partNumberOri.
      * 
      * @return
      *     possible object is
@@ -178,7 +178,7 @@ public class Product {
     }
 
     /**
-     * Sets the value of the partNumberOri property.
+     * Define el valor de la propiedad partNumberOri.
      * 
      * @param value
      *     allowed object is
@@ -190,7 +190,7 @@ public class Product {
     }
 
     /**
-     * Gets the value of the upc property.
+     * Obtiene el valor de la propiedad upc.
      * 
      * @return
      *     possible object is
@@ -202,7 +202,7 @@ public class Product {
     }
 
     /**
-     * Sets the value of the upc property.
+     * Define el valor de la propiedad upc.
      * 
      * @param value
      *     allowed object is
@@ -214,7 +214,7 @@ public class Product {
     }
 
     /**
-     * Gets the value of the codCategoria property.
+     * Obtiene el valor de la propiedad codCategoria.
      * 
      * @return
      *     possible object is
@@ -226,7 +226,7 @@ public class Product {
     }
 
     /**
-     * Sets the value of the codCategoria property.
+     * Define el valor de la propiedad codCategoria.
      * 
      * @param value
      *     allowed object is
@@ -238,7 +238,7 @@ public class Product {
     }
 
     /**
-     * Gets the value of the categoria property.
+     * Obtiene el valor de la propiedad categoria.
      * 
      * @return
      *     possible object is
@@ -250,7 +250,7 @@ public class Product {
     }
 
     /**
-     * Sets the value of the categoria property.
+     * Define el valor de la propiedad categoria.
      * 
      * @param value
      *     allowed object is
@@ -262,7 +262,7 @@ public class Product {
     }
 
     /**
-     * Gets the value of the codMarca property.
+     * Obtiene el valor de la propiedad codMarca.
      * 
      * @return
      *     possible object is
@@ -274,7 +274,7 @@ public class Product {
     }
 
     /**
-     * Sets the value of the codMarca property.
+     * Define el valor de la propiedad codMarca.
      * 
      * @param value
      *     allowed object is
@@ -286,7 +286,7 @@ public class Product {
     }
 
     /**
-     * Gets the value of the marca property.
+     * Obtiene el valor de la propiedad marca.
      * 
      * @return
      *     possible object is
@@ -298,7 +298,7 @@ public class Product {
     }
 
     /**
-     * Sets the value of the marca property.
+     * Define el valor de la propiedad marca.
      * 
      * @param value
      *     allowed object is
@@ -310,7 +310,7 @@ public class Product {
     }
 
     /**
-     * Gets the value of the bundle property.
+     * Obtiene el valor de la propiedad bundle.
      * 
      * @return
      *     possible object is
@@ -322,7 +322,7 @@ public class Product {
     }
 
     /**
-     * Sets the value of the bundle property.
+     * Define el valor de la propiedad bundle.
      * 
      * @param value
      *     allowed object is
