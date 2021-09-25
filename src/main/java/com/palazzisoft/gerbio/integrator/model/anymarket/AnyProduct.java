@@ -36,10 +36,10 @@ public class AnyProduct {
     private String gender;
     private Integer warrantyTime;
     private String warrantyText;
-    private double height;
-    private double width;
-    private double weight;
-    private double length;
+    private double height = 1d;
+    private double width = 1d;
+    private double weight = 1d;
+    private double length = 1d;
     private double priceFactor;
     private boolean calculatedPrice;
     private String definitionPriceScope;

@@ -19,7 +19,14 @@ public class ItemToAnyProductMapper {
         List<AnyImage> anyImages = new ArrayList<>();
         List<AnyProductCharacteristic> anyProductCharacteristics = new ArrayList<>();
 
-        anyProduct.setTitle(item.getDescription().getShort_());
+        final String title = item.getDescription().getShort_().length() < 120 ? item.getDescription().getShort_()
+                : item.getDescription().getShort_().substring(0, 119);
+
+        final String description = anyProduct.getDescription().length() < 120 ? anyProduct.getDescription()
+                : anyProduct.getDescription().substring(0, 119);
+
+        anyProduct.setTitle(title.replaceAll("/", "-"));
+        anyProduct.setDescription(description.replaceAll("/", "-"));
         anyProduct.setDefinitionPriceScope("SKU");
         anyProduct.setCalculatedPrice(false);
 
@@ -27,7 +34,7 @@ public class ItemToAnyProductMapper {
         anySku.setPrice(anyProduct.getPriceFactor());
         anySku.setSellPrice(anyProduct.getPriceFactor());
         anyProduct.setPriceFactor(1d);
-        anySku.setTitle(item.getDescription().getShort_());
+        anySku.setTitle(anyProduct.getTitle());
         anySku.setAmount(1d);
 
         anyProduct.setOrigin(AnyOrigin.builder().id(1L).build());
@@ -52,14 +59,14 @@ public class ItemToAnyProductMapper {
             int i = 0;
             for (TechnicalSpec technicalSpec : item.getTechnicalSpecList()){
                 if (nonNull(technicalSpec.getNombre()) && nonNull(technicalSpec.getDescripcion())) {
-                    final String name = technicalSpec.getNombre().length() < 255 ? technicalSpec.getNombre() :
-                            technicalSpec.getNombre().substring(0, 255);
+                    final String name = technicalSpec.getNombre().length() < 149 ? technicalSpec.getNombre() :
+                            technicalSpec.getNombre().substring(0, 149);
 
-                    final String value = technicalSpec.getDescripcion().length() < 255 ? technicalSpec.getDescripcion() :
-                            technicalSpec.getDescripcion().substring(0, 255);
+                    final String value = technicalSpec.getDescripcion().length() < 149 ? technicalSpec.getDescripcion() :
+                            technicalSpec.getDescripcion().substring(0, 149);
                     AnyProductCharacteristic anyProductCharacteristic = AnyProductCharacteristic.builder()
-                            .name(name)
-                            .value(value)
+                            .name(name.replaceAll("/", "-"))
+                            .value(value.replaceAll("/", "-"))
                             .index(i)
                             .build();
 
@@ -135,6 +142,22 @@ public class ItemToAnyProductMapper {
             if (warrantyOptional.isEmpty()) {
                 anyProduct.setWarrantyTime(1);
             }
+        }
+
+        // fix non zero values
+        if (anyProduct.getLength() <= 0d) {
+            anyProduct.setLength(1d);
+        }
+
+        if (anyProduct.getWeight() <= 0d) {
+            anyProduct.setWeight(1d);
+        }
+
+        if (anyProduct.getWidth() <= 0d) {
+            anyProduct.setWidth(1d);
+        }
+        if (anyProduct.getHeight() <= 0d) {
+            anyProduct.setHeight(1d);
         }
 
         return anyProduct;
