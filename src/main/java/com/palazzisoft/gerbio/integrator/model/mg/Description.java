@@ -14,4 +14,9 @@ public class Description {
 
     private String short_;
     private String maker;
+    private String product;
+
+    public String getDescriptionPretty() {
+        return short_ + System.lineSeparator() + maker;
+    }
 }

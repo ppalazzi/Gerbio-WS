@@ -99,11 +99,18 @@ public class MGWebService {
                 if (nonNull(descriptionNode)) {
                     Description description = Description.builder().build();
 
-                    if (nonNull(descriptionNode.getChildNodes().item(0))) {
-                        description.setShort_(descriptionNode.getChildNodes().item(0).getTextContent());
-                    }
-                    if (nonNull(descriptionNode.getChildNodes().item(1))) {
-                        description.setMaker(descriptionNode.getChildNodes().item(1).getTextContent());
+                    int size = descriptionNode.getChildNodes().getLength();
+                    for (int j = 0 ; j < size; j++) {
+                        Node node = descriptionNode.getChildNodes().item(j);
+                        if (node.getLocalName().equals("Maker")) {
+                            description.setMaker(node.getTextContent());
+                        }
+                        if (node.getLocalName().equals("Short")) {
+                            description.setShort_(node.getTextContent());
+                        }
+                        if (node.getLocalName().equals("Product")) {
+                            description.setProduct(node.getTextContent());
+                        }
                     }
 
                     item.setDescription(description);

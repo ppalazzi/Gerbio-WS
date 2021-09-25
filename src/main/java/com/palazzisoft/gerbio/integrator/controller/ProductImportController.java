@@ -22,6 +22,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/importing")
@@ -59,35 +60,41 @@ public class ProductImportController {
 
 
         for (AnyProduct mgProduct : products) {
-            final String partnerId = mgProduct.getSkus().get(0).getPartnerId();
-            Optional<AnyProduct> baseEquivalent = currentDBProducts.stream()
-                    .filter(p -> p.getSkus().get(0).getPartnerId().equals(partnerId)).findFirst();
-
-            if (baseEquivalent.isPresent()) {
-                // compare amount and update stock and price if required
-            }
-            else {
-                // add to database and anymarket
-                Optional<AnyBrand> currentBrand = findBrandByPartnerId(brands, mgProduct.getBrand().getPartnerId());
-                Optional<AnyCategory> currentCategory = findCategoryByPartnerId(categories, mgProduct.getCategory().getPartnerId());
-
-                if (currentBrand.isPresent() && currentCategory.isPresent()) {
-                    log.debug("Brands and Category found");
-
-                    mgProduct.setBrand(currentBrand.get());
-                    mgProduct.setCategory(currentCategory.get());
-                    AnyProduct anyResponse = productService.saveAndPersist(mgProduct);
-                }
-                else {
-                    log.error("Brand or category not found {} {} ", currentBrand, currentCategory);
-                }
-
+            if (mgProduct.getSkus().get(0).getAmount() > 0d) {
+                importProduct(currentDBProducts, brands, categories, mgProduct);
             }
         }
 
         log.info("Product importation of {} items, run succesfully", products.size());
 
         return ResponseEntity.ok(products);
+    }
+
+    private void importProduct(List<AnyProduct> currentDBProducts, List<AnyBrand> brands, List<AnyCategory> categories, AnyProduct mgProduct) {
+        final String partnerId = mgProduct.getSkus().get(0).getPartnerId();
+        Optional<AnyProduct> baseEquivalent = currentDBProducts.stream()
+                .filter(p -> p.getSkus().get(0).getPartnerId().equals(partnerId)).findFirst();
+
+        if (baseEquivalent.isPresent()) {
+            // compare amount and update stock and price if required
+        }
+        else {
+            // add to database and anymarket
+            Optional<AnyBrand> currentBrand = findBrandByPartnerId(brands, mgProduct.getBrand().getPartnerId());
+            Optional<AnyCategory> currentCategory = findCategoryByPartnerId(categories, mgProduct.getCategory().getPartnerId());
+
+            if (currentBrand.isPresent() && currentCategory.isPresent()) {
+                log.debug("Brands and Category found");
+
+                mgProduct.setBrand(currentBrand.get());
+                mgProduct.setCategory(currentCategory.get());
+                AnyProduct anyResponse = productService.saveAndPersist(mgProduct);
+            }
+            else {
+                log.error("Brand or category not found {} {} ", currentBrand, currentCategory);
+            }
+
+        }
     }
 
     private List<AnyProduct> retrieveProductsFromMG() {

@@ -22,20 +22,14 @@ public class ItemToAnyProductMapper {
         final String title = item.getDescription().getShort_().length() < 120 ? item.getDescription().getShort_()
                 : item.getDescription().getShort_().substring(0, 119);
 
-        final String description = anyProduct.getDescription().length() < 120 ? anyProduct.getDescription()
-                : anyProduct.getDescription().substring(0, 119);
-
         anyProduct.setTitle(title.replaceAll("/", "-"));
-        anyProduct.setDescription(description.replaceAll("/", "-"));
-        anyProduct.setDefinitionPriceScope("SKU");
-        anyProduct.setCalculatedPrice(false);
+        anyProduct.setDescription(item.getDescription().getDescriptionPretty());
+        anyProduct.setDefinitionPriceScope("COST");
+        anyProduct.setCalculatedPrice(true);
 
         AnySku anySku = anyProduct.getSkus().get(0);
-        anySku.setPrice(anyProduct.getPriceFactor());
-        anySku.setSellPrice(anyProduct.getPriceFactor());
         anyProduct.setPriceFactor(1d);
         anySku.setTitle(anyProduct.getTitle());
-        anySku.setAmount(1d);
 
         anyProduct.setOrigin(AnyOrigin.builder().id(1L).build());
 
@@ -145,22 +139,38 @@ public class ItemToAnyProductMapper {
         }
 
         // fix non zero values
+        fixPackageValues(anyProduct);
+
+        return anyProduct;
+    }
+
+    private void fixPackageValues(AnyProduct anyProduct) {
         if (anyProduct.getLength() <= 0d) {
             anyProduct.setLength(1d);
+        }
+        if (anyProduct.getLength() > 10000d) {
+            anyProduct.setLength(9999d);
         }
 
         if (anyProduct.getWeight() <= 0d) {
             anyProduct.setWeight(1d);
         }
+        if (anyProduct.getWeight() > 5000d) {
+            anyProduct.setWeight(5000d);
+        }
 
         if (anyProduct.getWidth() <= 0d) {
             anyProduct.setWidth(1d);
         }
+        if (anyProduct.getWidth() > 10000d) {
+            anyProduct.setWidth(9999d);
+        }
         if (anyProduct.getHeight() <= 0d) {
             anyProduct.setHeight(1d);
         }
-
-        return anyProduct;
+        if (anyProduct.getHeight() > 10000d) {
+            anyProduct.setHeight(9999d);
+        }
     }
 
     private Double convertMeasure(String valueFromXML){

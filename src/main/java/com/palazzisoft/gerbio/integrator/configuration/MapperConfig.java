@@ -36,7 +36,10 @@ public class MapperConfig {
                 .field("marca", "brand.partnerId")
                 .field("codCategoria", "category.partnerId")
                 .field("categoria", "category.name")
-                .field("precio", "priceFactor")
+                .field("precio", "skus[0].price")
+                .field("precio", "skus[0].sellPrice")
+                .field("stock", "skus[0].amount")
+                .field("upc", "skus[0].ean")
                 .byDefault()
                 .register();
     }
