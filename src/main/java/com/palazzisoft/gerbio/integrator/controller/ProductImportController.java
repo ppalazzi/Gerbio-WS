@@ -65,6 +65,16 @@ public class ProductImportController {
             }
         }
 
+        List<AnyProduct> deletedProducts = currentDBProducts.stream()
+                .filter(mgproduct -> products.stream()
+                        .noneMatch(dbproduct -> mgproduct.getId().equals(dbproduct.getId())))
+                .collect(Collectors.toList());
+
+        for (AnyProduct deletedProduct : deletedProducts) {
+            deletedProduct.getSkus().get(0).setAmount(0d);
+            productService.updateProduct(deletedProduct);
+        }
+
         log.info("Product importation of {} items, run succesfully", products.size());
 
         return ResponseEntity.ok(products);
