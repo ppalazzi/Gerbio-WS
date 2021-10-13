@@ -1,8 +1,10 @@
 package com.palazzisoft.gerbio.integrator.service.anymarket;
 
+import com.palazzisoft.gerbio.integrator.model.IntegratorError;
 import com.palazzisoft.gerbio.integrator.model.anymarket.AnyCategory;
 import com.palazzisoft.gerbio.integrator.repository.CategoryRepository;
 import com.palazzisoft.gerbio.integrator.response.CategoryResponse;
+import com.palazzisoft.gerbio.integrator.service.IntegratorErrorService;
 import com.palazzisoft.gerbio.integrator.service.mg.CategoryMGService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,13 +29,16 @@ public class CategoryService extends AbstractService<AnyCategory> {
 
     private final CategoryRepository categoryRepository;
     private final CategoryMGService categoryMGService;
+    private final IntegratorErrorService integratorErrorService;
 
     @Autowired
     public CategoryService(WebClient webClient, final CategoryRepository categoryRepository,
-                            final CategoryMGService categoryMGService) {
+                            final CategoryMGService categoryMGService,
+                           final IntegratorErrorService integratorErrorService) {
         super(webClient, AnyCategory.class);
         this.categoryRepository = categoryRepository;
         this.categoryMGService = categoryMGService;
+        this.integratorErrorService = integratorErrorService;
     }
 
     @Override
@@ -66,6 +72,13 @@ public class CategoryService extends AbstractService<AnyCategory> {
                         return clientResponse.bodyToMono(CategoryResponse.class);
                     } else {
                         log.error("Something went wrong when retrieving Categories");
+                        integratorErrorService.saveError(
+                                IntegratorError.builder()
+                                        .timestamp(LocalDateTime.now())
+                                        .type(clientResponse.statusCode().getReasonPhrase())
+                                        .errorMessage("Error retrieving Categories")
+                                        .className(this.getClass().getName())
+                                        .build());
                         return Mono.just(null);
                     }
                 });

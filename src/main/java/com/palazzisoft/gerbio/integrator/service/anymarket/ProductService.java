@@ -1,9 +1,11 @@
 package com.palazzisoft.gerbio.integrator.service.anymarket;
 
+import com.palazzisoft.gerbio.integrator.model.IntegratorError;
 import com.palazzisoft.gerbio.integrator.model.anymarket.AnyProduct;
 import com.palazzisoft.gerbio.integrator.model.anymarket.AnySku;
 import com.palazzisoft.gerbio.integrator.repository.ProductRepository;
 import com.palazzisoft.gerbio.integrator.response.ProductResponse;
+import com.palazzisoft.gerbio.integrator.service.IntegratorErrorService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -11,6 +13,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,10 +26,14 @@ public class ProductService extends AbstractService<AnyProduct> {
     private final String URL_BASE = "/v2/products";
 
     private final ProductRepository productRepository;
+    private final IntegratorErrorService integratorErrorService;
 
-    public ProductService(WebClient webClient, final ProductRepository productRepository) {
+
+    public ProductService(WebClient webClient, final ProductRepository productRepository,
+                          final IntegratorErrorService integratorErrorService) {
         super(webClient, AnyProduct.class);
         this.productRepository = productRepository;
+        this.integratorErrorService = integratorErrorService;
     }
 
     @Override
@@ -54,6 +61,13 @@ public class ProductService extends AbstractService<AnyProduct> {
             }
             else {
                 log.error("Something went wrong when retrieving Products");
+                integratorErrorService.saveError(
+                        IntegratorError.builder()
+                                .timestamp(LocalDateTime.now())
+                                .type(clientResponse.statusCode().getReasonPhrase())
+                                .errorMessage("Error retrieving products")
+                                .className(this.getClass().getName())
+                                .build());
                 return Mono.just(null);
             }
         });
@@ -77,9 +91,7 @@ public class ProductService extends AbstractService<AnyProduct> {
 
     @Transactional
     public void saveProducts(List<AnyProduct> products) {
-       products.stream().forEach(p -> {
-            productRepository.save(p);
-       });
+       products.forEach(productRepository::save);
     }
 
     public AnyProduct saveAndPersist(AnyProduct anyProduct) {

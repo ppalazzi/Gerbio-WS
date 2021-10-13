@@ -2,7 +2,6 @@ package com.palazzisoft.gerbio.integrator.catalogo;
 
 
 import com.palazzisoft.gerbio.integrator.model.anymarket.AnyCategory;
-import com.palazzisoft.gerbio.integrator.response.CategoryResponse;
 import com.palazzisoft.gerbio.integrator.service.anymarket.CategoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;

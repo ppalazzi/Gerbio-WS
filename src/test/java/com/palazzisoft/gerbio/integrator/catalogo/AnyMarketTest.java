@@ -2,13 +2,11 @@ package com.palazzisoft.gerbio.integrator.catalogo;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.palazzisoft.gerbio.integrator.model.anymarket.*;
-import com.palazzisoft.gerbio.integrator.response.CategoryResponse;
 import com.palazzisoft.gerbio.integrator.service.anymarket.BrandService;
 import com.palazzisoft.gerbio.integrator.service.anymarket.CategoryService;
 import com.palazzisoft.gerbio.integrator.service.anymarket.ProductService;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

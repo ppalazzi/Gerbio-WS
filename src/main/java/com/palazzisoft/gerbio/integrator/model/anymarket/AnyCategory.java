@@ -3,7 +3,9 @@ package com.palazzisoft.gerbio.integrator.model.anymarket;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Transient;
 
 @Builder
 @Getter @Setter @Data

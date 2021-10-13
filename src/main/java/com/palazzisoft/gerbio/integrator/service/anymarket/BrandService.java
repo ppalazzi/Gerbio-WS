@@ -1,8 +1,10 @@
 package com.palazzisoft.gerbio.integrator.service.anymarket;
 
+import com.palazzisoft.gerbio.integrator.model.IntegratorError;
 import com.palazzisoft.gerbio.integrator.model.anymarket.AnyBrand;
 import com.palazzisoft.gerbio.integrator.repository.BrandRepository;
 import com.palazzisoft.gerbio.integrator.response.BrandResponse;
+import com.palazzisoft.gerbio.integrator.service.IntegratorErrorService;
 import com.palazzisoft.gerbio.integrator.service.mg.BrandMGService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,13 +29,15 @@ public class BrandService extends AbstractService<AnyBrand> {
 
     private final BrandRepository brandRepository;
     private final BrandMGService brandMGService;
+    private final IntegratorErrorService integratorErrorService;
 
     @Autowired
     public BrandService(final WebClient webClient, final BrandRepository brandRepository,
-                        final BrandMGService brandMGService) {
+                        final BrandMGService brandMGService, final IntegratorErrorService integratorErrorService) {
         super(webClient, AnyBrand.class);
         this.brandRepository = brandRepository;
         this.brandMGService = brandMGService;
+        this.integratorErrorService = integratorErrorService;
     }
 
     @Override
@@ -65,6 +70,13 @@ public class BrandService extends AbstractService<AnyBrand> {
                     }
                     else {
                         log.error("Something went wrong when retrieving Brands");
+                        integratorErrorService.saveError(
+                                IntegratorError.builder()
+                                        .timestamp(LocalDateTime.now())
+                                        .type(clientResponse.statusCode().getReasonPhrase())
+                                        .errorMessage("Error retrieving Brands")
+                                        .className(this.getClass().getName())
+                                        .build());
                         return Mono.just(null);
                     }
                 });

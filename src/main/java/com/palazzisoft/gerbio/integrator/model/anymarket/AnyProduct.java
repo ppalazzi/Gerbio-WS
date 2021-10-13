@@ -2,7 +2,6 @@ package com.palazzisoft.gerbio.integrator.model.anymarket;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
-import org.springframework.util.CollectionUtils;
 
 import javax.persistence.*;
 import java.util.ArrayList;

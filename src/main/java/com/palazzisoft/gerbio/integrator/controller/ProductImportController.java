@@ -2,10 +2,12 @@ package com.palazzisoft.gerbio.integrator.controller;
 
 import com.palazzisoft.gerbio.integrator.catalogo.ProductsRequest;
 import com.palazzisoft.gerbio.integrator.mapping.ItemToAnyProductMapper;
+import com.palazzisoft.gerbio.integrator.model.IntegratorError;
 import com.palazzisoft.gerbio.integrator.model.anymarket.AnyBrand;
 import com.palazzisoft.gerbio.integrator.model.anymarket.AnyCategory;
 import com.palazzisoft.gerbio.integrator.model.anymarket.AnyProduct;
 import com.palazzisoft.gerbio.integrator.model.mg.Item;
+import com.palazzisoft.gerbio.integrator.service.IntegratorErrorService;
 import com.palazzisoft.gerbio.integrator.service.anymarket.BrandService;
 import com.palazzisoft.gerbio.integrator.service.anymarket.CategoryService;
 import com.palazzisoft.gerbio.integrator.service.anymarket.ProductService;
@@ -19,7 +21,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,15 +39,17 @@ public class ProductImportController {
     private final ProductService productService;
     private final MGWebService mgWebService;
     private final MapperFacade mapper;
+    private final IntegratorErrorService integratorErrorService;
 
     public ProductImportController(final CategoryService categoryService, final BrandService brandService,
                                    final ProductService productService, final MGWebService mgWebService,
-                                   final MapperFacade mapperFacade) {
+                                   final MapperFacade mapperFacade, final IntegratorErrorService integratorErrorService) {
         this.categoryService = categoryService;
         this.productService = productService;
         this.brandService = brandService;
         this.mgWebService = mgWebService;
         this.mapper = mapperFacade;
+        this.integratorErrorService = integratorErrorService;
     }
 
     @GetMapping
@@ -82,28 +88,45 @@ public class ProductImportController {
 
     private void importProduct(List<AnyProduct> currentDBProducts, List<AnyBrand> brands, List<AnyCategory> categories, AnyProduct mgProduct) {
         final String partnerId = mgProduct.getSkus().get(0).getPartnerId();
-        Optional<AnyProduct> baseEquivalent = currentDBProducts.stream()
-                .filter(p -> p.getSkus().get(0).getPartnerId().equals(partnerId)).findFirst();
+        try{
+            Optional<AnyProduct> baseEquivalent = currentDBProducts.stream()
+                    .filter(p -> p.getSkus().get(0).getPartnerId().equals(partnerId)).findFirst();
 
-        if (baseEquivalent.isPresent()) {
-            // compare amount and update stock and price if required
-        }
-        else {
-            // add to database and anymarket
-            Optional<AnyBrand> currentBrand = findBrandByPartnerId(brands, mgProduct.getBrand().getPartnerId());
-            Optional<AnyCategory> currentCategory = findCategoryByPartnerId(categories, mgProduct.getCategory().getPartnerId());
-
-            if (currentBrand.isPresent() && currentCategory.isPresent()) {
-                log.debug("Brands and Category found");
-
-                mgProduct.setBrand(currentBrand.get());
-                mgProduct.setCategory(currentCategory.get());
-                AnyProduct anyResponse = productService.saveAndPersist(mgProduct);
+            if (baseEquivalent.isPresent()) {
+                // compare amount and update stock and price if required
             }
             else {
-                log.error("Brand or category not found {} {} ", currentBrand, currentCategory);
-            }
+                // add to database and anymarket
+                Optional<AnyBrand> currentBrand = findBrandByPartnerId(brands, mgProduct.getBrand().getPartnerId());
+                Optional<AnyCategory> currentCategory = findCategoryByPartnerId(categories, mgProduct.getCategory().getPartnerId());
 
+                if (currentBrand.isPresent() && currentCategory.isPresent()) {
+                    log.debug("Brands and Category found");
+
+                    mgProduct.setBrand(currentBrand.get());
+                    mgProduct.setCategory(currentCategory.get());
+                    AnyProduct anyResponse = productService.saveAndPersist(mgProduct);
+                }
+                else {
+                    log.error("Brand or category not found {} {} ", currentBrand, currentCategory);
+                    integratorErrorService.saveError(
+                            IntegratorError.builder()
+                                    .timestamp(LocalDateTime.now())
+                                    .type("Error importing products")
+                                    .errorMessage("Brand or category not found")
+                                    .className(this.getClass().getName())
+                                    .build());
+                }
+            }
+        } catch (Exception e) {
+            integratorErrorService.saveError(
+                    IntegratorError.builder()
+                            .timestamp(LocalDateTime.now())
+                            .type(e.getClass().toString())
+                            .errorMessage(e.getMessage())
+                            .className(this.getClass().getName())
+                            .stackTrace(Arrays.toString(e.getStackTrace()))
+                            .build());
         }
     }
 

@@ -3,8 +3,6 @@ package com.palazzisoft.gerbio.integrator.mapping;
 import com.palazzisoft.gerbio.integrator.catalogo.Product;
 import com.palazzisoft.gerbio.integrator.model.anymarket.AnyProduct;
 import ma.glasnost.orika.MapperFacade;
-import ma.glasnost.orika.MapperFactory;
-import ma.glasnost.orika.impl.DefaultMapperFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
