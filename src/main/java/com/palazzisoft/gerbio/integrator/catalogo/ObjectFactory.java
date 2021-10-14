@@ -78,6 +78,22 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link GetStockPriceCatalogTime }
+     * 
+     */
+    public GetStockPriceCatalogTime createGetStockPriceCatalogTime() {
+        return new GetStockPriceCatalogTime();
+    }
+
+    /**
+     * Create an instance of {@link GetStockPriceCatalogTimeResponse }
+     * 
+     */
+    public GetStockPriceCatalogTimeResponse createGetStockPriceCatalogTimeResponse() {
+        return new GetStockPriceCatalogTimeResponse();
+    }
+
+    /**
      * Create an instance of {@link GetCategories }
      * 
      */

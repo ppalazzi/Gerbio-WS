@@ -7,9 +7,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Clase Java para Category complex type.
+ * <p>Java class for Category complex type.
  * 
- * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="Category"&gt;
@@ -37,7 +37,7 @@ public class Category {
     protected String categoria;
 
     /**
-     * Obtiene el valor de la propiedad codCategoria.
+     * Gets the value of the codCategoria property.
      * 
      * @return
      *     possible object is
@@ -49,7 +49,7 @@ public class Category {
     }
 
     /**
-     * Define el valor de la propiedad codCategoria.
+     * Sets the value of the codCategoria property.
      * 
      * @param value
      *     allowed object is
@@ -61,7 +61,7 @@ public class Category {
     }
 
     /**
-     * Obtiene el valor de la propiedad categoria.
+     * Gets the value of the categoria property.
      * 
      * @return
      *     possible object is
@@ -73,7 +73,7 @@ public class Category {
     }
 
     /**
-     * Define el valor de la propiedad categoria.
+     * Sets the value of the categoria property.
      * 
      * @param value
      *     allowed object is

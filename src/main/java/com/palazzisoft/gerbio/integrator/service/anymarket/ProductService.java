@@ -92,9 +92,4 @@ public class ProductService extends AbstractService<AnyProduct> {
 
         return mgProduct;
     }
-
-    public void updateProduct(AnyProduct anyProduct) {
-        AnyProduct mgProduct = update(anyProduct, anyProduct.getId());
-        mgProduct = productRepository.save(mgProduct);
-    }
 }

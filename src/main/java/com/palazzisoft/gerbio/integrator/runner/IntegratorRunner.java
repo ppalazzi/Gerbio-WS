@@ -1,19 +1,12 @@
 package com.palazzisoft.gerbio.integrator.runner;
 
-import com.palazzisoft.gerbio.integrator.catalogo.BrandRequest;
 import com.palazzisoft.gerbio.integrator.model.anymarket.AnyBrand;
 import com.palazzisoft.gerbio.integrator.model.anymarket.AnyCategory;
-import com.palazzisoft.gerbio.integrator.model.anymarket.AnyOrigin;
 import com.palazzisoft.gerbio.integrator.model.anymarket.AnyProduct;
-import com.palazzisoft.gerbio.integrator.response.BrandResponse;
-import com.palazzisoft.gerbio.integrator.response.CategoryResponse;
-import com.palazzisoft.gerbio.integrator.response.ProductResponse;
 import com.palazzisoft.gerbio.integrator.service.anymarket.BrandService;
 import com.palazzisoft.gerbio.integrator.service.anymarket.CategoryService;
 import com.palazzisoft.gerbio.integrator.service.anymarket.OriginService;
 import com.palazzisoft.gerbio.integrator.service.anymarket.ProductService;
-import com.palazzisoft.gerbio.integrator.service.mg.BrandMGService;
-import com.palazzisoft.gerbio.integrator.service.mg.MGWebService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -41,7 +34,7 @@ public class IntegratorRunner implements ApplicationRunner {
     }
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(ApplicationArguments args) {
         log.info("Initializing Gerbio Integrator App");
 
         log.info("Retrieving from AnyMarket brands, categories and products to be persisted in DB");

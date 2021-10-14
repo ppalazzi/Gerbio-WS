@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import ma.glasnost.orika.MapperFacade;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,7 +23,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/importing")
@@ -47,6 +47,7 @@ public class ProductImportController {
     }
 
     @GetMapping
+    //@Scheduled(fixedRate = 60000)
     public ResponseEntity<List<AnyProduct>> importProducts() {
         log.info("Starting importing Product at {} ", Instant.now());
 
@@ -63,16 +64,6 @@ public class ProductImportController {
             if (mgProduct.getSkus().get(0).getAmount() > 0d) {
                 importProduct(currentDBProducts, brands, categories, mgProduct);
             }
-        }
-
-        List<AnyProduct> deletedProducts = currentDBProducts.stream()
-                .filter(mgproduct -> products.stream()
-                        .noneMatch(dbproduct -> mgproduct.getId().equals(dbproduct.getId())))
-                .collect(Collectors.toList());
-
-        for (AnyProduct deletedProduct : deletedProducts) {
-            deletedProduct.getSkus().get(0).setAmount(0d);
-            productService.updateProduct(deletedProduct);
         }
 
         log.info("Product importation of {} items, run succesfully", products.size());

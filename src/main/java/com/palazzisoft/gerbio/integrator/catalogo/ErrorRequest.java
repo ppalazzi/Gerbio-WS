@@ -7,9 +7,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Clase Java para ErrorRequest complex type.
+ * <p>Java class for ErrorRequest complex type.
  * 
- * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="ErrorRequest"&gt;
@@ -40,7 +40,7 @@ public class ErrorRequest {
     protected ArrayOfError listErrors;
 
     /**
-     * Obtiene el valor de la propiedad result.
+     * Gets the value of the result property.
      * 
      */
     public int getResult() {
@@ -48,7 +48,7 @@ public class ErrorRequest {
     }
 
     /**
-     * Define el valor de la propiedad result.
+     * Sets the value of the result property.
      * 
      */
     public void setResult(int value) {
@@ -56,7 +56,7 @@ public class ErrorRequest {
     }
 
     /**
-     * Obtiene el valor de la propiedad message.
+     * Gets the value of the message property.
      * 
      * @return
      *     possible object is
@@ -68,7 +68,7 @@ public class ErrorRequest {
     }
 
     /**
-     * Define el valor de la propiedad message.
+     * Sets the value of the message property.
      * 
      * @param value
      *     allowed object is
@@ -80,7 +80,7 @@ public class ErrorRequest {
     }
 
     /**
-     * Obtiene el valor de la propiedad listErrors.
+     * Gets the value of the listErrors property.
      * 
      * @return
      *     possible object is
@@ -92,7 +92,7 @@ public class ErrorRequest {
     }
 
     /**
-     * Define el valor de la propiedad listErrors.
+     * Sets the value of the listErrors property.
      * 
      * @param value
      *     allowed object is

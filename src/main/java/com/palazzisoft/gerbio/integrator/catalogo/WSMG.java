@@ -17,7 +17,7 @@ import javax.xml.ws.WebServiceFeature;
  * Generated source version: 2.2
  * 
  */
-@WebServiceClient(name = "WSMG", targetNamespace = "http://tempuri.org/", wsdlLocation = "https://ecommerce.microglobal.com.ar/WSMG_back/WSMG.asmx?WSDL")
+@WebServiceClient(name = "WSMG", targetNamespace = "http://tempuri.org/", wsdlLocation = "https://ecommerce.microglobal.com.ar/WSMG/WSMG.asmx?WSDL")
 public class WSMG
     extends Service
 {
@@ -30,7 +30,7 @@ public class WSMG
         URL url = null;
         WebServiceException e = null;
         try {
-            url = new URL("https://ecommerce.microglobal.com.ar/WSMG_back/WSMG.asmx?WSDL");
+            url = new URL("https://ecommerce.microglobal.com.ar/WSMG/WSMG.asmx?WSDL");
         } catch (MalformedURLException ex) {
             e = new WebServiceException(ex);
         }
