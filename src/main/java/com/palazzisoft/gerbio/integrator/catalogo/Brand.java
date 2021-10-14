@@ -7,9 +7,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Clase Java para Brand complex type.
+ * <p>Java class for Brand complex type.
  * 
- * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="Brand"&gt;
@@ -37,7 +37,7 @@ public class Brand {
     protected String marca;
 
     /**
-     * Obtiene el valor de la propiedad codMarca.
+     * Gets the value of the codMarca property.
      * 
      * @return
      *     possible object is
@@ -49,7 +49,7 @@ public class Brand {
     }
 
     /**
-     * Define el valor de la propiedad codMarca.
+     * Sets the value of the codMarca property.
      * 
      * @param value
      *     allowed object is
@@ -61,7 +61,7 @@ public class Brand {
     }
 
     /**
-     * Obtiene el valor de la propiedad marca.
+     * Gets the value of the marca property.
      * 
      * @return
      *     possible object is
@@ -73,7 +73,7 @@ public class Brand {
     }
 
     /**
-     * Define el valor de la propiedad marca.
+     * Sets the value of the marca property.
      * 
      * @param value
      *     allowed object is

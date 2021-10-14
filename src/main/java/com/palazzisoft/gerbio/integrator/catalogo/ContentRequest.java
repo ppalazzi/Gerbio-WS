@@ -11,9 +11,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Clase Java para ContentRequest complex type.
+ * <p>Java class for ContentRequest complex type.
  * 
- * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="ContentRequest"&gt;
@@ -54,7 +54,7 @@ public class ContentRequest {
     protected ContentRequest.Content content;
 
     /**
-     * Obtiene el valor de la propiedad result.
+     * Gets the value of the result property.
      * 
      */
     public int getResult() {
@@ -62,7 +62,7 @@ public class ContentRequest {
     }
 
     /**
-     * Define el valor de la propiedad result.
+     * Sets the value of the result property.
      * 
      */
     public void setResult(int value) {
@@ -70,7 +70,7 @@ public class ContentRequest {
     }
 
     /**
-     * Obtiene el valor de la propiedad message.
+     * Gets the value of the message property.
      * 
      * @return
      *     possible object is
@@ -82,7 +82,7 @@ public class ContentRequest {
     }
 
     /**
-     * Define el valor de la propiedad message.
+     * Sets the value of the message property.
      * 
      * @param value
      *     allowed object is
@@ -94,7 +94,7 @@ public class ContentRequest {
     }
 
     /**
-     * Obtiene el valor de la propiedad content.
+     * Gets the value of the content property.
      * 
      * @return
      *     possible object is
@@ -106,7 +106,7 @@ public class ContentRequest {
     }
 
     /**
-     * Define el valor de la propiedad content.
+     * Sets the value of the content property.
      * 
      * @param value
      *     allowed object is
@@ -119,9 +119,9 @@ public class ContentRequest {
 
 
     /**
-     * <p>Clase Java para anonymous complex type.
+     * <p>Java class for anonymous complex type.
      * 
-     * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
+     * <p>The following schema fragment specifies the expected content contained within this class.
      * 
      * <pre>
      * &lt;complexType&gt;

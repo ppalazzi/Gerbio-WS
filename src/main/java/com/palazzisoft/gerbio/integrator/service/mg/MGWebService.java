@@ -25,6 +25,7 @@ import static java.util.Objects.nonNull;
 public class MGWebService {
 
     private WSMG wsmg;
+    private WSMGAltaNdp wsmgAltaNdp;
     private String user;
     private String clientId;
     private String password;
@@ -50,6 +51,10 @@ public class MGWebService {
 
     public CategoryRequest getCategories() {
         return wsmg.getWSMGSoap().getCategories(clientId, user, password);
+    }
+
+    public PedidoRequest notifyOrderInMG(OPedido oPedido) {
+        return wsmgAltaNdp.getWSMGAltaNdpSoap().sendAltaPedido(clientId, user, password, oPedido);
     }
 
     public List<Item> getContenido() {

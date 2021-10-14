@@ -117,7 +117,8 @@
 				</executions>
 				<configuration>
 					<wsdlUrls>
-						<wsdlUrl>https://ecommerce.microglobal.com.ar/WSMG_back/WSMG.asmx?WSDL</wsdlUrl>
+						<wsdlUrl>https://ws.microglobal.com.ar/WSMGAltaNdp_test/WSMGAltaNdp.asmx?WSDL</wsdlUrl>
+						<wsdlUrl>https://ecommerce.microglobal.com.ar/WSMG/WSMG.asmx?WSDL</wsdlUrl>
 					</wsdlUrls>
 					<keep>true</keep>
 					<packageName>com.palazzisoft.gerbio.integrator.catalogo</packageName>
