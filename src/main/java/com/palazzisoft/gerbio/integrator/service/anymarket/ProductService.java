@@ -1,9 +1,13 @@
 package com.palazzisoft.gerbio.integrator.service.anymarket;
 
+import com.palazzisoft.gerbio.integrator.exception.GerbioException;
+import com.palazzisoft.gerbio.integrator.model.IntegratorError;
 import com.palazzisoft.gerbio.integrator.model.anymarket.AnyProduct;
 import com.palazzisoft.gerbio.integrator.model.anymarket.AnySku;
+import com.palazzisoft.gerbio.integrator.model.anymarket.AnyStock;
 import com.palazzisoft.gerbio.integrator.repository.ProductRepository;
 import com.palazzisoft.gerbio.integrator.response.ProductResponse;
+import com.palazzisoft.gerbio.integrator.service.IntegratorErrorService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -11,7 +15,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.springframework.util.CollectionUtils.isEmpty;
@@ -23,10 +29,16 @@ public class ProductService extends AbstractService<AnyProduct> {
     private final String URL_BASE = "/v2/products";
 
     private final ProductRepository productRepository;
+    private final IntegratorErrorService integratorErrorService;
+    private final StockService stockService;
 
-    public ProductService(WebClient webClient, final ProductRepository productRepository) {
+    public ProductService(WebClient webClient, final ProductRepository productRepository,
+                          final IntegratorErrorService integratorErrorService,
+                          final StockService stockService) {
         super(webClient, AnyProduct.class);
         this.productRepository = productRepository;
+        this.integratorErrorService = integratorErrorService;
+        this.stockService = stockService;
     }
 
     @Override
@@ -61,18 +73,30 @@ public class ProductService extends AbstractService<AnyProduct> {
         return response.block();
     }
 
-    public List<AnyProduct> getAll() {
-        List<AnyProduct> allProducts = new ArrayList<>();
+    public List<AnyProduct> getAll() throws GerbioException {
+        try {
+            List<AnyProduct> allProducts = new ArrayList<>();
 
-        int offset = 0;
-        ProductResponse response = getByOffset(offset);
+            int offset = 0;
+            ProductResponse response = getByOffset(offset);
 
-        while (!isEmpty(response.getContent())) {
-            allProducts.addAll(response.getContent());
-            response = getByOffset(offset +=5);
+            while (!isEmpty(response.getContent())) {
+                allProducts.addAll(response.getContent());
+                response = getByOffset(offset +=5);
+            }
+
+            return allProducts;
+        } catch (Exception e) {
+            integratorErrorService.saveError(IntegratorError.builder()
+                    .className(this.getClass().getName())
+                    .errorMessage("Error Retrieving Products From MG")
+                    .timestamp(LocalDateTime.now())
+                    .stackTrace(e.getMessage())
+                    .type(IntegratorError.ErrorType.PRODUCT)
+                    .build());
+
+            throw new GerbioException(e);
         }
-
-        return allProducts;
     }
 
     @Transactional
@@ -91,5 +115,39 @@ public class ProductService extends AbstractService<AnyProduct> {
         log.debug("Succesfully save and persisted partner id {}", anyProduct.getSkus().get(0).getPartnerId());
 
         return mgProduct;
+    }
+
+    public AnyProduct updateAndPersist(AnyProduct anyProduct) {
+        log.info("Updating and storing product with partner id {} ", anyProduct.getSkus().get(0).getPartnerId());
+
+        try {
+            AnySku sku = anyProduct.getSkus().get(0);
+            AnyStock stock = AnyStock.builder()
+                    .id(sku.getId())
+                    .cost(sku.getPrice())
+                    .partnerId(sku.getPartnerId())
+                    .quantity((int)sku.getAmount())
+                    .build();
+
+            stockService.update(Arrays.asList(stock));
+
+            anyProduct = productRepository.save(anyProduct);
+
+            log.debug("Succesfully updated and stored product with partner id {} ", anyProduct.getSkus().get(0).getPartnerId());
+        }
+        catch (Exception e) {
+            log.error("Error Updating product with stock and price", e);
+            integratorErrorService.saveError(IntegratorError.builder()
+                    .className(this.getClass().getName())
+                    .errorMessage("Error Updating Stock and Price to Product with partner id {} "
+                            + anyProduct.getSkus().get(0).getPartnerId())
+                    .timestamp(LocalDateTime.now())
+                    .stackTrace(e.getMessage())
+                    .type(IntegratorError.ErrorType.IMPORT)
+                    .build());
+        }
+
+
+        return anyProduct;
     }
 }

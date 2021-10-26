@@ -276,7 +276,7 @@ public class AnyProductTest {
         AnyProduct impresoraCanon = productService.getById(2274570L);
 
         AnyProductCharacteristic caracteristics = AnyProductCharacteristic.builder()
-                .index(0)
+                .indexProductsCharacteristic(0)
                 .value("Azul")
                 .name("Color")
                 .build();
@@ -328,7 +328,7 @@ public class AnyProductTest {
         piano.setCharacteristics(list(AnyProductCharacteristic.builder()
                 .name("Color")
                 .value("Black")
-                .index(0)
+                .indexProductsCharacteristic(0)
                 .build()));
 
         productService.save(piano);
@@ -399,7 +399,7 @@ public class AnyProductTest {
         monitor.setCharacteristics(list(AnyProductCharacteristic.builder()
                 .name("Color")
                 .value("Black")
-                .index(0)
+                .indexProductsCharacteristic(0)
                 .build()));
 
         //productService.save(monitor);
@@ -469,7 +469,7 @@ public class AnyProductTest {
         product.setWarrantyText("8 Años");
         product.setModel("3BNCERD-UPDATED");
 
-        product.getCharacteristics().add(AnyProductCharacteristic.builder().index(1).name("Size").value("Huge").build());
+        product.getCharacteristics().add(AnyProductCharacteristic.builder().indexProductsCharacteristic(1).name("Size").value("Huge").build());
         product.getImages().get(0).setUrl("https://microglobalpromos.com.ar/2021/img/072021/BUNMK1292_2.jpg");
 
         productService.update(product, product.getId());

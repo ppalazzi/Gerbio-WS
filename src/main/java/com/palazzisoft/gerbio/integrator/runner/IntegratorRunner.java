@@ -1,5 +1,6 @@
 package com.palazzisoft.gerbio.integrator.runner;
 
+import com.palazzisoft.gerbio.integrator.exception.GerbioException;
 import com.palazzisoft.gerbio.integrator.model.anymarket.AnyBrand;
 import com.palazzisoft.gerbio.integrator.model.anymarket.AnyCategory;
 import com.palazzisoft.gerbio.integrator.model.anymarket.AnyProduct;
@@ -40,15 +41,23 @@ public class IntegratorRunner implements ApplicationRunner {
         log.info("Retrieving from AnyMarket brands, categories and products to be persisted in DB");
         originService.storeInitOrigins();
 
-        List<AnyBrand> brands = brandService.getAll();
-        brandService.saveBrands(brands);
-        brandService.synchronizeBrands();
+        try {
+            List<AnyBrand> brands = brandService.getAll();
+            brandService.saveBrands(brands);
+            brandService.synchronizeBrands();
 
-        List<AnyCategory> categories = categoryService.getAll();
-        categoryService.saveCategories(categories);
-        categoryService.synchronizeCategories();
+            List<AnyCategory> categories = categoryService.getAll();
+            categoryService.saveCategories(categories);
+            categoryService.synchronizeCategories();
 
-        List<AnyProduct> products = productService.getAll();
-        productService.saveProducts(products);
+            List<AnyProduct> products = productService.getAll();
+            productService.saveProducts(products);
+        }
+        catch (GerbioException e ) {
+            log.error("Error synchronizing data", e);
+        }
+        catch (Exception e) {
+            log.error("Error unexpected", e);
+        }
     }
 }

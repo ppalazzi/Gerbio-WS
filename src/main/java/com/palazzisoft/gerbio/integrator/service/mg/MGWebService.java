@@ -1,5 +1,8 @@
 package com.palazzisoft.gerbio.integrator.service.mg;
 
+import com.palazzisoft.gerbio.integrator.alta.OPedido;
+import com.palazzisoft.gerbio.integrator.alta.PedidoRequest;
+import com.palazzisoft.gerbio.integrator.alta.WSMGAltaNdp;
 import com.palazzisoft.gerbio.integrator.catalogo.*;
 import com.palazzisoft.gerbio.integrator.model.mg.Description;
 import com.palazzisoft.gerbio.integrator.model.mg.Item;
@@ -11,10 +14,7 @@ import org.springframework.stereotype.Service;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,10 +32,12 @@ public class MGWebService {
 
     @Autowired
     public MGWebService(final WSMG wsmg,
+                        final WSMGAltaNdp wsmgAltaNdp,
                         @Value("${mg.user}") String user,
                         @Value("${mg.clientId}") String clientId,
                         @Value("${mg.password}") String password) {
         this.wsmg = wsmg;
+        this.wsmgAltaNdp = wsmgAltaNdp;
         this.user = user;
         this.clientId = clientId;
         this.password = password;

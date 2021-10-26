@@ -7,7 +7,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -37,11 +36,11 @@ public class ItemToAnyProductMapper {
             int index = 0;
             for (String pictureUrl : item.getPicturesUrls()){
                 AnyImage image = AnyImage.builder()
-                        .index(index++)
+                        .indexImage(index++)
                         .originalImage(pictureUrl)
                         .url(pictureUrl)
                         .build();
-                if (image.getIndex() == 0){
+                if (image.getIndexImage() == 0){
                     image.setMain(true);
                 }
                 anyImages.add(image);
@@ -61,7 +60,7 @@ public class ItemToAnyProductMapper {
                     AnyProductCharacteristic anyProductCharacteristic = AnyProductCharacteristic.builder()
                             .name(name.replaceAll("/", "-"))
                             .value(value.replaceAll("/", "-"))
-                            .index(i)
+                            .indexProductsCharacteristic(i)
                             .build();
 
                     anyProductCharacteristics.add(anyProductCharacteristic);

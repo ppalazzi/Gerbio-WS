@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Entity(name = "Order")
+@Entity(name = "AnyOrder")
 public class AnyOrder {
 
     @Id
@@ -32,6 +32,6 @@ public class AnyOrder {
     private double gross;
     private double total;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<AnyOrderItem> items;
 }

@@ -50,7 +50,7 @@ public class AnyProduct {
     @ManyToMany(cascade = CascadeType.ALL)
     private List<AnyProductCharacteristic> characteristics;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<AnyImage> images;
 
     @OneToMany(cascade = CascadeType.ALL)

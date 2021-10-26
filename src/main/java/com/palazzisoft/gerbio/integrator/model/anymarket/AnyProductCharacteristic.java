@@ -1,6 +1,7 @@
 package com.palazzisoft.gerbio.integrator.model.anymarket;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.persistence.Entity;
@@ -15,7 +16,8 @@ import javax.persistence.Id;
 public class AnyProductCharacteristic {
 
     @Id
-    private Integer index;
+    @JsonProperty("index")
+    private Integer indexProductsCharacteristic;
 
     private String name;
     private String value;

@@ -1,7 +1,7 @@
 package com.palazzisoft.gerbio.integrator.configuration;
 
+import com.palazzisoft.gerbio.integrator.alta.WSMGAltaNdp;
 import com.palazzisoft.gerbio.integrator.catalogo.WSMG;
-import com.palazzisoft.gerbio.integrator.catalogo.WSMGAltaNdp;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

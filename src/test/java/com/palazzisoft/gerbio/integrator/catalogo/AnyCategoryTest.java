@@ -135,7 +135,7 @@ public class AnyCategoryTest {
     }
 
     @Test
-    void testAllCategories() {
+    void testAllCategories() throws Exception {
         List<AnyCategory> categories = categoryService.getAll();
         log.info(categories.toString());
     }

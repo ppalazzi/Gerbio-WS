@@ -1,10 +1,16 @@
 package com.palazzisoft.gerbio.integrator.controller;
 
-import com.palazzisoft.gerbio.integrator.catalogo.*;
-import com.palazzisoft.gerbio.integrator.model.anymarket.*;
+import com.palazzisoft.gerbio.integrator.alta.OPedido;
+import com.palazzisoft.gerbio.integrator.alta.PedidoRequest;
+import com.palazzisoft.gerbio.integrator.alta.ArrayOfProducto;
+import com.palazzisoft.gerbio.integrator.alta.Producto;
+import com.palazzisoft.gerbio.integrator.catalogo.Product;
+import com.palazzisoft.gerbio.integrator.model.IntegratorError;
+import com.palazzisoft.gerbio.integrator.model.anymarket.AnyCallbackNotification;
+import com.palazzisoft.gerbio.integrator.model.anymarket.AnyOrder;
+import com.palazzisoft.gerbio.integrator.service.IntegratorErrorService;
 import com.palazzisoft.gerbio.integrator.service.anymarket.OrderService;
 import com.palazzisoft.gerbio.integrator.service.mg.MGWebService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,11 +20,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.toList;
 
 @RestController
 @RequestMapping(value = "/order")
@@ -28,9 +32,12 @@ public class CallbackController {
     private final OrderService orderService;
     private final MGWebService mgWebService;
     private final String clienteId;
+    private final IntegratorErrorService integratorErrorService;
 
     public CallbackController(final OrderService orderService, final MGWebService mgWebService,
-                              final @Value("${mg.clientId}") String clienteId) {
+                              final @Value("${mg.clientId}") String clienteId, final
+                              IntegratorErrorService integratorErrorService) {
+        this.integratorErrorService = integratorErrorService;
         this.orderService = orderService;
         this.mgWebService = mgWebService;
         this.clienteId = clienteId;
@@ -44,13 +51,22 @@ public class CallbackController {
             try {
                 Long orderId = NumberUtils.toLong(notification.getContent().getId());
                 AnyOrder order = orderService.getById(orderId);
+                order = orderService.saveOrder(order);
 
                 // TODO notify MG previous creation of OPedido
-                OPedido pedido = createPedido(order);
-                mgWebService.notifyOrderInMG(pedido);
+                OPedido oPedido = createPedido(order);
+                PedidoRequest pedidoRequest = mgWebService.notifyOrderInMG(oPedido);
+                log.info(pedidoRequest.getMessage());
             }
             catch (Exception e) {
                 log.error("Error retrieving order for {} ", notification);
+                integratorErrorService.saveError(IntegratorError.builder()
+                        .className(this.getClass().getName())
+                        .errorMessage("Error Retrieving Order")
+                        .timestamp(LocalDateTime.now())
+                        .stackTrace(e.getCause().toString())
+                        .type(IntegratorError.ErrorType.ORDER)
+                        .build());
             }
         }
 
@@ -87,14 +103,14 @@ public class CallbackController {
         ids.setCliente(clienteId);
         ids.setOrigen("TIENDA");
         ids.setID(order.getId().toString());
-        ids.setTienda(""); // TODO debemos completar este dato
+        ids.setTienda(clienteId);
 
         OPedido pedido = new OPedido();
         pedido.setMoneda("PES");
         pedido.setIDs(ids);
-        pedido.setTipoEnvio("RETIRA");
+        pedido.setTipoEnvio("ENVIA");
         pedido.setObservacion("Retira en MG");
-        pedido.setSucursal("");
+        pedido.setSucursal("Leopardi 714 Castelar");
         pedido.setProductos(productos);
         pedido.setUFI(ufi);
 

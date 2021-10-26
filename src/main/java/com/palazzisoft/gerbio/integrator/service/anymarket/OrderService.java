@@ -21,4 +21,8 @@ public class OrderService extends AbstractService<AnyOrder> {
     protected String getURLBase() {
         return URL_BASE;
     }
+
+    public AnyOrder saveOrder(AnyOrder anyOrder) {
+        return orderRepository.save(anyOrder);
+    }
 }

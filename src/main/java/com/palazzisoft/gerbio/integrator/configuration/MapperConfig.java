@@ -6,11 +6,16 @@ import com.palazzisoft.gerbio.integrator.catalogo.Product;
 import com.palazzisoft.gerbio.integrator.model.anymarket.AnyBrand;
 import com.palazzisoft.gerbio.integrator.model.anymarket.AnyCategory;
 import com.palazzisoft.gerbio.integrator.model.anymarket.AnyProduct;
+import ma.glasnost.orika.CustomMapper;
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.MapperFactory;
+import ma.glasnost.orika.MappingContext;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @Configuration
 public class MapperConfig {
@@ -41,6 +46,17 @@ public class MapperConfig {
                 .field("stock", "skus[0].amount")
                 .field("upc", "skus[0].ean")
                 .byDefault()
+                .customize(new CustomMapper<>() {
+                    @Override
+                    public void mapAtoB(Product product, AnyProduct anyProduct, MappingContext context) {
+                        super.mapAtoB(product, anyProduct, context);
+                        double price = (product.getPrecio() * product.getIvaPct()) + product.getPrecio();
+                        BigDecimal bd = new BigDecimal(price).setScale(2, RoundingMode.HALF_UP);
+
+                        anyProduct.getSkus().iterator().next().setSellPrice(bd.doubleValue());
+                        anyProduct.getSkus().iterator().next().setPrice(bd.doubleValue());
+                    }
+                })
                 .register();
     }
 

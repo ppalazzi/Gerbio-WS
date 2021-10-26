@@ -17,6 +17,7 @@
 	<properties>
 		<java.version>11</java.version>
 		<skipTests>true</skipTests>
+		<mariadb.client.version>2.7.2</mariadb.client.version>
 	</properties>
 
 	<dependencies>
@@ -71,6 +72,13 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
+		<!-- database dependencies -->
+		<dependency>
+			<groupId>org.mariadb.jdbc</groupId>
+			<artifactId>mariadb-java-client</artifactId>
+			<version>${mariadb.client.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
@@ -109,7 +117,29 @@
 				<version>2.6</version>
 				<executions>
 					<execution>
-						<id>wsimport-from-jdk</id>
+						<id>wsimport-catalog</id>
+						<goals>
+							<goal>wsimport</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<wsdlUrls>
+						<wsdlUrl>https://ecommerce.microglobal.com.ar/WSMG/WSMG.asmx?WSDL</wsdlUrl>
+					</wsdlUrls>
+					<keep>true</keep>
+					<packageName>com.palazzisoft.gerbio.integrator.catalogo</packageName>
+					<sourceDestDir>src/main/java</sourceDestDir>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jaxws-maven-plugin</artifactId>
+				<version>2.6</version>
+				<executions>
+					<execution>
+						<id>wsimport-pedido</id>
 						<goals>
 							<goal>wsimport</goal>
 						</goals>
@@ -118,10 +148,9 @@
 				<configuration>
 					<wsdlUrls>
 						<wsdlUrl>https://ws.microglobal.com.ar/WSMGAltaNdp_test/WSMGAltaNdp.asmx?WSDL</wsdlUrl>
-						<wsdlUrl>https://ecommerce.microglobal.com.ar/WSMG/WSMG.asmx?WSDL</wsdlUrl>
 					</wsdlUrls>
 					<keep>true</keep>
-					<packageName>com.palazzisoft.gerbio.integrator.catalogo</packageName>
+					<packageName>com.palazzisoft.gerbio.integrator.alta</packageName>
 					<sourceDestDir>src/main/java</sourceDestDir>
 				</configuration>
 			</plugin>

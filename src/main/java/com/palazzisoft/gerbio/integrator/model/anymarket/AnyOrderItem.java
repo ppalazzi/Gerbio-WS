@@ -3,7 +3,9 @@ package com.palazzisoft.gerbio.integrator.model.anymarket;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
+import javax.annotation.Generated;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
@@ -18,6 +20,7 @@ import javax.persistence.ManyToOne;
 public class AnyOrderItem {
 
     @Id
+    @GeneratedValue
     private Long id;
 
     @ManyToOne

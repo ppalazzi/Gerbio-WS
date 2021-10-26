@@ -1,8 +1,11 @@
 package com.palazzisoft.gerbio.integrator.service.anymarket;
 
+import com.palazzisoft.gerbio.integrator.exception.GerbioException;
+import com.palazzisoft.gerbio.integrator.model.IntegratorError;
 import com.palazzisoft.gerbio.integrator.model.anymarket.AnyCategory;
 import com.palazzisoft.gerbio.integrator.repository.CategoryRepository;
 import com.palazzisoft.gerbio.integrator.response.CategoryResponse;
+import com.palazzisoft.gerbio.integrator.service.IntegratorErrorService;
 import com.palazzisoft.gerbio.integrator.service.mg.CategoryMGService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,13 +30,16 @@ public class CategoryService extends AbstractService<AnyCategory> {
 
     private final CategoryRepository categoryRepository;
     private final CategoryMGService categoryMGService;
+    private final IntegratorErrorService integratorErrorService;
 
     @Autowired
     public CategoryService(WebClient webClient, final CategoryRepository categoryRepository,
-                            final CategoryMGService categoryMGService) {
+                            final CategoryMGService categoryMGService,
+                           final IntegratorErrorService integratorErrorService) {
         super(webClient, AnyCategory.class);
         this.categoryRepository = categoryRepository;
         this.categoryMGService = categoryMGService;
+        this.integratorErrorService = integratorErrorService;
     }
 
     @Override
@@ -40,19 +47,32 @@ public class CategoryService extends AbstractService<AnyCategory> {
         return URL_BASE;
     }
 
-    public void synchronizeCategories() {
-        List<AnyCategory> categoriesMG = categoryMGService.buildAnyCategory();
+    public void synchronizeCategories() throws GerbioException {
+        try {
+            List<AnyCategory> categoriesMG = categoryMGService.buildAnyCategory();
 
-        for (AnyCategory categoryMG : categoriesMG) {
-            AnyCategory retrieved = categoryRepository.findAnyCategoryByPartnerId(categoryMG.getPartnerId());
+            for (AnyCategory categoryMG : categoriesMG) {
+                AnyCategory retrieved = categoryRepository.findAnyCategoryByPartnerId(categoryMG.getPartnerId());
 
-            // if not in db, add to any market and db
-            if (isNull(retrieved)) {
-                categoryMG.setDefinitionPriceScope("SKU");
-                categoryMG.setName(categoryMG.getName().replaceAll("/", "-"));
-                AnyCategory retrievedFromAny = save(categoryMG);
-                categoryRepository.save(retrievedFromAny);
+                // if not in db, add to any market and db
+                if (isNull(retrieved)) {
+                    categoryMG.setDefinitionPriceScope("SKU");
+                    categoryMG.setName(categoryMG.getName().replaceAll("/", "-"));
+                    AnyCategory retrievedFromAny = save(categoryMG);
+                    categoryRepository.save(retrievedFromAny);
+                }
             }
+        }
+        catch (Exception e) {
+            integratorErrorService.saveError(IntegratorError.builder()
+                    .className(this.getClass().getName())
+                    .errorMessage("Error Syncronizing Categories")
+                    .timestamp(LocalDateTime.now())
+                    .stackTrace(e.getMessage())
+                    .type(IntegratorError.ErrorType.BRAND)
+                    .build());
+
+            throw new GerbioException(e);
         }
     }
 
@@ -73,18 +93,31 @@ public class CategoryService extends AbstractService<AnyCategory> {
         return response.block();
     }
 
-    public List<AnyCategory> getAll() {
-        List<AnyCategory> allCategories = new ArrayList<>();
+    public List<AnyCategory> getAll() throws GerbioException {
+        try {
+            List<AnyCategory> allCategories = new ArrayList<>();
 
-        int offset = 0;
-        CategoryResponse response = getByOffset(offset);
+            int offset = 0;
+            CategoryResponse response = getByOffset(offset);
 
-        while (!isEmpty(response.getContent())) {
-            allCategories.addAll(response.getContent());
-            response = getByOffset(offset += 5);
+            while (!isEmpty(response.getContent())) {
+                allCategories.addAll(response.getContent());
+                response = getByOffset(offset += 5);
+            }
+
+            return allCategories;
         }
+        catch (Exception e) {
+            integratorErrorService.saveError(IntegratorError.builder()
+                    .className(this.getClass().getName())
+                    .errorMessage("Error Retrieving Categories From AnyMarket")
+                    .timestamp(LocalDateTime.now())
+                    .stackTrace(e.getMessage())
+                    .type(IntegratorError.ErrorType.CATEGORY)
+                    .build());
 
-        return allCategories;
+            throw new GerbioException(e);
+        }
     }
 
     @Transactional

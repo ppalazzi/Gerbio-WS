@@ -31,7 +31,7 @@ public class AnyMarketTest {
     private ProductService productService;
 
     @Test
-    void testCatalog() {
+    void testCatalog() throws Exception {
         List<AnyCategory> response = categoryService.getAll();
         log.info("Respuesta es {} ", response);
 

@@ -1,10 +1,10 @@
 package com.palazzisoft.gerbio.integrator.model.anymarket;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Builder
@@ -20,7 +20,8 @@ public class AnyImage {
     @Id
     private Long id;
 
-    private Integer index;
+    @JsonProperty("index")
+    private Integer indexImage;
     private boolean main;
     private String url;
     private String thumbnailUrl;
