@@ -28,7 +28,7 @@ public abstract class AbstractService<T> {
     public T save(T t) {
         log.info("Storing {} by with data {}", clazz.getName(), t.toString());
         return (T) webClient.post().uri(getURLBase()).body(Mono.just(t), clazz).retrieve().bodyToMono(clazz)
-                .doOnEach(data ->  log.info(data.toString()))
+                .doOnEach(data ->  log.debug(data.toString()))
                 .doOnError(error -> log.error(error.toString()))
                 .block();
     }
@@ -36,7 +36,7 @@ public abstract class AbstractService<T> {
     public T update(T t, Long id) {
         log.info("Updating {} with data {} ", clazz.getName(), t.toString());
         return (T) webClient.put().uri(getURLBase().concat("/") + id).body(Mono.just(t), clazz).retrieve().bodyToMono(clazz)
-                .doOnEach(data ->  log.info(data.toString()))
+                .doOnEach(data ->  log.debug(data.toString()))
                 .doOnError(error -> log.error(error.toString()))
                 .block();
     }
@@ -45,13 +45,16 @@ public abstract class AbstractService<T> {
         log.info("Updating {} with data {} ", clazz.getName());
 
         return (T) webClient.put().uri(getURLBase().concat("/")).body(Mono.just(t), clazz).retrieve().bodyToMono(clazz)
-                .doOnEach(data ->  log.info("Updating " + data.toString()))
+                .doOnEach(data ->  log.debug("Updating " + data.toString()))
                 .doOnError(error -> log.error("Error Updating " + error.toString()))
                 .block();
     }
 
     public T delete(Long id) {
         log.info("Removing {} with id {}", clazz.getName(), id);
-        return (T) webClient.delete().uri(getURLBase().concat("/") + id).retrieve().bodyToMono(clazz).block();
+        return (T) webClient.delete().uri(getURLBase().concat("/") + id).retrieve().bodyToMono(clazz)
+                .doOnEach(data -> log.debug("Removing : {}" + data.toString()))
+                .doOnError(error -> log.error("Error Removing " + error.toString()))
+                .block();
     }
 }

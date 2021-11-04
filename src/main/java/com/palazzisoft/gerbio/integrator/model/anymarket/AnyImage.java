@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -30,6 +31,8 @@ public class AnyImage {
     private String originalImage;
     private String variation;
     private String status;
+
+    @Column(columnDefinition = "TEXT")
     private String statusMessage;
     private Integer standardWidth;
     private Integer standardHeight;

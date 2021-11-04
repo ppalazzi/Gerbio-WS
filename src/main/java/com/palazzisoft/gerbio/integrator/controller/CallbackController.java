@@ -32,15 +32,17 @@ public class CallbackController {
     private final OrderService orderService;
     private final MGWebService mgWebService;
     private final String clienteId;
+    private final String tienda;
     private final IntegratorErrorService integratorErrorService;
 
     public CallbackController(final OrderService orderService, final MGWebService mgWebService,
-                              final @Value("${mg.clientId}") String clienteId, final
-                              IntegratorErrorService integratorErrorService) {
+                              final @Value("${mg.clientId}") String clienteId, final @Value("${mg.tienda}") String tienda,
+                              final IntegratorErrorService integratorErrorService) {
         this.integratorErrorService = integratorErrorService;
         this.orderService = orderService;
         this.mgWebService = mgWebService;
         this.clienteId = clienteId;
+        this.tienda = tienda;
     }
 
     @PostMapping
@@ -50,13 +52,15 @@ public class CallbackController {
         if (notification.getType().equals("ORDER")) {
             try {
                 Long orderId = NumberUtils.toLong(notification.getContent().getId());
+                log.info("Procesando Orden con id {} " + orderId);
+
                 AnyOrder order = orderService.getById(orderId);
                 order = orderService.saveOrder(order);
+                log.info("Order con id {} guardada en base{}", order.getId());
 
-                // TODO notify MG previous creation of OPedido
                 OPedido oPedido = createPedido(order);
                 PedidoRequest pedidoRequest = mgWebService.notifyOrderInMG(oPedido);
-                log.info(pedidoRequest.getMessage());
+                log.info("Result :" + pedidoRequest.getResult() + " , Message : " + pedidoRequest.getMessage());
             }
             catch (Exception e) {
                 log.error("Error retrieving order for {} ", notification);
@@ -103,14 +107,14 @@ public class CallbackController {
         ids.setCliente(clienteId);
         ids.setOrigen("TIENDA");
         ids.setID(order.getId().toString());
-        ids.setTienda(clienteId);
+        ids.setTienda(tienda);
 
         OPedido pedido = new OPedido();
         pedido.setMoneda("PES");
         pedido.setIDs(ids);
-        pedido.setTipoEnvio("ENVIA");
+        pedido.setTipoEnvio("RETIRA");
         pedido.setObservacion("Retira en MG");
-        pedido.setSucursal("Leopardi 714 Castelar");
+        pedido.setSucursal("");
         pedido.setProductos(productos);
         pedido.setUFI(ufi);
 

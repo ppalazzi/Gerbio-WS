@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import ma.glasnost.orika.MapperFacade;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -52,7 +53,7 @@ public class ProductImportController {
     }
 
     @GetMapping
-    //@Scheduled(fixedRate = 60000)
+    @Scheduled(fixedDelay = 600000, initialDelay = 600000)
     public ResponseEntity<List<AnyProduct>> importProducts() throws GerbioException {
         log.info("Starting importing Product at {} ", Instant.now());
 
@@ -127,6 +128,7 @@ public class ProductImportController {
 
     private List<AnyProduct> retrieveProductsFromMG() throws GerbioException {
         try {
+            log.info("Retrieving products from MG");
             ProductsRequest productRequest = mgWebService.getCatalog();
             List<Item> items = mgWebService.getContenido();
 
@@ -139,7 +141,8 @@ public class ProductImportController {
 
             ItemToAnyProductMapper itemToAnyProductMapper = new ItemToAnyProductMapper();
             for (Item item : items) {
-                Optional<AnyProduct> anyProductOptional = anyProducts.stream().filter(ap -> ap.getSkus().get(0).getPartnerId().equals(item.getPartNumber())).findFirst();
+                Optional<AnyProduct> anyProductOptional = anyProducts.stream().filter(ap -> ap.getSkus().get(0).getPartnerId()
+                        .equals(item.getPartNumber())).findFirst();
                 if (anyProductOptional.isPresent()) {
                     itemToAnyProductMapper.mapItemToAnyProduct(anyProductOptional.get(), item);
                 }

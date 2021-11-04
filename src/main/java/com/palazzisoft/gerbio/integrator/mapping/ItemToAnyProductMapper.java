@@ -131,7 +131,11 @@ public class ItemToAnyProductMapper {
 
             Optional<TechnicalSpec> warrantyOptional = item.getTechnicalSpecList().stream()
                     .filter(technicalSpec -> technicalSpec.getNombre().equals("Garantia")).findFirst();
-            warrantyOptional.ifPresent(technicalSpec -> anyProduct.setWarrantyText(technicalSpec.getDescripcion()));
+            warrantyOptional.ifPresent(technicalSpec -> {
+                String warranteText = technicalSpec.getDescripcion().length() > 255 ? technicalSpec.getDescripcion().substring(0, 254) :
+                        technicalSpec.getDescripcion();;
+                anyProduct.setWarrantyText(warranteText);
+            });
             if (warrantyOptional.isEmpty()) {
                 anyProduct.setWarrantyTime(1);
             }

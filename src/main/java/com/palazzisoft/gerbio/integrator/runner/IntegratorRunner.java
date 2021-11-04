@@ -36,7 +36,7 @@ public class IntegratorRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        log.info("Initializing Gerbio Integrator App");
+        log.debug("Initializing Gerbio Integrator App");
 
         log.info("Retrieving from AnyMarket brands, categories and products to be persisted in DB");
         originService.storeInitOrigins();
@@ -59,5 +59,7 @@ public class IntegratorRunner implements ApplicationRunner {
         catch (Exception e) {
             log.error("Error unexpected", e);
         }
+
+        log.info("Synchronization fully performed");
     }
 }

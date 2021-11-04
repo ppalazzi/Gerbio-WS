@@ -18,6 +18,9 @@ public class MGConfiguration {
     @Value("${mg.password}")
     private String password;
 
+    @Value("${mg.tienda}")
+    private String tienda;
+
     @Bean
     public WSMG msmg() {
         return new WSMG();

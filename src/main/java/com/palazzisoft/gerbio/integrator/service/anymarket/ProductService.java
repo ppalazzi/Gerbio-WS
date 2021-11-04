@@ -56,7 +56,7 @@ public class ProductService extends AbstractService<AnyProduct> {
     }
 
     public ProductResponse getByOffset(int offset) {
-        log.info("Retrieving Products");
+        log.info("Retrieving Products with offset " + offset);
 
         Mono<ProductResponse> response = webClient.get().uri(URL_BASE.concat("?offset=" + offset))
                 .exchangeToMono(clientResponse -> {

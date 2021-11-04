@@ -19,9 +19,5 @@ public class JaxbConfiguration {
         props.put("jaxb.formatted.output", false);
         jaxb2Marshaller.setMarshallerProperties(props);
         return jaxb2Marshaller;
-
-        //Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
-        //marshaller.setContextPath("com.palazzisoft.gerbio.integrator.catalogo");
-        //return marshaller;
     }
 }
