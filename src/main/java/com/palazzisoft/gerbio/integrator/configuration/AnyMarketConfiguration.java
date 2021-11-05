@@ -4,6 +4,7 @@ import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
@@ -19,6 +20,12 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class AnyMarketConfiguration {
 
+    @Value("${any.url}")
+    private String anyUrl;
+
+    @Value("${any.token}")
+    private String token;
+
     @Bean
     public WebClient webClient() {
         HttpClient httpClient = HttpClient.create()
@@ -30,8 +37,8 @@ public class AnyMarketConfiguration {
 
         return WebClient.builder()
                 .clientConnector(new ReactorClientHttpConnector(httpClient))
-                .defaultHeader("gumgatoken","L35024029G1625768667662R1037733922")
-                .baseUrl("http://sandbox-api.anymarket.com.br")
+                .defaultHeader("gumgatoken",token)
+                .baseUrl(anyUrl)
                 .filter(logRequest())
                 .build();
     }
