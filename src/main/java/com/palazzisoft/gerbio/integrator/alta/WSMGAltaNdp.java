@@ -17,7 +17,7 @@ import javax.xml.ws.WebServiceFeature;
  * Generated source version: 2.2
  * 
  */
-@WebServiceClient(name = "WSMGAltaNdp", targetNamespace = "http://tempuri.org/", wsdlLocation = "https://ws.microglobal.com.ar/WSMGAltaNdp_test/WSMGAltaNdp.asmx?WSDL")
+@WebServiceClient(name = "WSMGAltaNdp", targetNamespace = "http://tempuri.org/", wsdlLocation = "http://ws.microglobal.com.ar/WSMGAltaNdp/WSMGAltaNdp.asmx?WSDL")
 public class WSMGAltaNdp
     extends Service
 {
@@ -30,7 +30,7 @@ public class WSMGAltaNdp
         URL url = null;
         WebServiceException e = null;
         try {
-            url = new URL("https://ws.microglobal.com.ar/WSMGAltaNdp_test/WSMGAltaNdp.asmx?WSDL");
+            url = new URL("http://ws.microglobal.com.ar/WSMGAltaNdp/WSMGAltaNdp.asmx?WSDL");
         } catch (MalformedURLException ex) {
             e = new WebServiceException(ex);
         }

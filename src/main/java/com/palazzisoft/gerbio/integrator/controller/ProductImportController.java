@@ -53,7 +53,7 @@ public class ProductImportController {
     }
 
     @GetMapping
-    @Scheduled(fixedDelay = 600000, initialDelay = 600000)
+    @Scheduled(fixedDelay = 3600000, initialDelay = 3600000)
     public ResponseEntity<List<AnyProduct>> importProducts() throws GerbioException {
         log.info("Starting importing Product at {} ", Instant.now());
 
