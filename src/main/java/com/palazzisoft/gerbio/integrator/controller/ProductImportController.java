@@ -105,9 +105,26 @@ public class ProductImportController {
                 mgProduct.setCategory(currentCategory.get());
                 importSingleProduct(mgProduct);
             } else {
-                log.error("Brand or category not found {} {} ", currentBrand, currentCategory);
+                log.info("Brand or category not found, will synchronize again {} {} ", currentBrand, currentCategory);
+                syncronizeBrandsAndProducts();
             }
 
+        }
+    }
+
+    private void syncronizeBrandsAndProducts() {
+        try {
+            brandService.synchronizeBrands();
+            categoryService.synchronizeCategories();
+        } catch (GerbioException e) {
+            log.error("Error synchronizing brands and categories");
+            integratorErrorService.saveError(IntegratorError.builder()
+                    .className(this.getClass().getName())
+                    .errorMessage("Error synchronizing brands and categories ")
+                    .timestamp(LocalDateTime.now())
+                    .stackTrace(e.getMessage())
+                    .type(IntegratorError.ErrorType.SYNCHRONIZING)
+                    .build());
         }
     }
 

@@ -21,12 +21,12 @@ public abstract class AbstractService<T> {
     protected abstract String getURLBase() ;
 
     public T getById(Long id) {
-        log.info("Retrieving {} by id {}", clazz.getName(), id);
+        log.debug("Retrieving {} by id {}", clazz.getName(), id);
         return (T) webClient.get().uri(getURLBase().concat("/") + id).retrieve().bodyToMono(clazz).block();
     }
 
     public T save(T t) {
-        log.info("Storing {} by with data {}", clazz.getName(), t.toString());
+        log.debug("Storing {} by with data {}", clazz.getName(), t.toString());
         return (T) webClient.post().uri(getURLBase()).body(Mono.just(t), clazz).retrieve().bodyToMono(clazz)
                 .doOnEach(data ->  log.debug(data.toString()))
                 .doOnError(error -> log.error(error.toString()))
@@ -34,7 +34,7 @@ public abstract class AbstractService<T> {
     }
 
     public T update(T t, Long id) {
-        log.info("Updating {} with data {} ", clazz.getName(), t.toString());
+        log.debug("Updating {} with data {} ", clazz.getName(), t.toString());
         return (T) webClient.put().uri(getURLBase().concat("/") + id).body(Mono.just(t), clazz).retrieve().bodyToMono(clazz)
                 .doOnEach(data ->  log.debug(data.toString()))
                 .doOnError(error -> log.error(error.toString()))
@@ -42,7 +42,7 @@ public abstract class AbstractService<T> {
     }
 
     public T update(T t) {
-        log.info("Updating {} with data {} ", clazz.getName());
+        log.debug("Updating {} with data {} ", clazz.getName());
 
         return (T) webClient.put().uri(getURLBase().concat("/")).body(Mono.just(t), clazz).retrieve().bodyToMono(clazz)
                 .doOnEach(data ->  log.debug("Updating " + data.toString()))
@@ -51,7 +51,7 @@ public abstract class AbstractService<T> {
     }
 
     public T delete(Long id) {
-        log.info("Removing {} with id {}", clazz.getName(), id);
+        log.debug("Removing {} with id {}", clazz.getName(), id);
         return (T) webClient.delete().uri(getURLBase().concat("/") + id).retrieve().bodyToMono(clazz)
                 .doOnEach(data -> log.debug("Removing : {}" + data.toString()))
                 .doOnError(error -> log.error("Error Removing " + error.toString()))

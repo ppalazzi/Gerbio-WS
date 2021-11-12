@@ -52,15 +52,36 @@ public class CallbackController {
         if (notification.getType().equals("ORDER")) {
             try {
                 Long orderId = NumberUtils.toLong(notification.getContent().getId());
-                log.info("Procesando Orden con id {} " + orderId);
+                log.info("Procesando Orden con id {} ", orderId);
 
                 AnyOrder order = orderService.getById(orderId);
-                order = orderService.saveOrder(order);
-                log.info("Order con id {} guardada en base{}", order.getId());
 
-                OPedido oPedido = createPedido(order);
-                PedidoRequest pedidoRequest = mgWebService.notifyOrderInMG(oPedido);
-                log.info("Result :" + pedidoRequest.getResult() + " , Message : " + pedidoRequest.getMessage());
+                if (order.getStatus().equals("PAID_WAITING_SHIP")) {
+                    order = orderService.saveOrder(order);
+                    log.info("Order con id {} guardada en base ", order.getId());
+
+                    OPedido oPedido = createPedido(order);
+                    PedidoRequest pedidoRequest = mgWebService.notifyOrderInMG(oPedido);
+
+                    // pedido exitoso
+                    if (pedidoRequest != null && pedidoRequest.getResult() == 0) {
+                        log.info("Response :" + pedidoRequest.getResult() + " , Message : " + pedidoRequest.getPedidoResponse().getNumNdp());
+                    }
+                    else {
+                        log.error("Error notificando a MG sobre el producto {} ", order.getId());
+                        integratorErrorService.saveError(IntegratorError.builder()
+                                .className(this.getClass().getName())
+                                .errorMessage("Error Notifying Order to MG")
+                                .timestamp(LocalDateTime.now())
+                                .stackTrace("")
+                                .type(IntegratorError.ErrorType.IMPORT)
+                                .build());
+                    }
+                }
+                else {
+                    log.info("Order {} todavía no paga y con status {} ", order.getId(),  order.getStatus());
+                }
+
             }
             catch (Exception e) {
                 log.error("Error retrieving order for {} ", notification);
@@ -117,6 +138,7 @@ public class CallbackController {
         pedido.setSucursal("");
         pedido.setProductos(productos);
         pedido.setUFI(ufi);
+        pedido.setObservacionDespacho("Retira en MG");
 
         return pedido;
     }

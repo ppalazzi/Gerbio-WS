@@ -56,8 +56,6 @@ public class ProductService extends AbstractService<AnyProduct> {
     }
 
     public ProductResponse getByOffset(int offset) {
-        log.info("Retrieving Products with offset " + offset);
-
         Mono<ProductResponse> response = webClient.get().uri(URL_BASE.concat("?offset=" + offset))
                 .exchangeToMono(clientResponse -> {
             if (clientResponse.statusCode() == HttpStatus.OK) {
@@ -65,7 +63,7 @@ public class ProductService extends AbstractService<AnyProduct> {
                 return clientResponse.bodyToMono(ProductResponse.class);
             }
             else {
-                log.error("Something went wrong when retrieving Products");
+                log.error("Something went wrong when retrieving Products with offset {} ", offset);
                 return Mono.just(null);
             }
         });

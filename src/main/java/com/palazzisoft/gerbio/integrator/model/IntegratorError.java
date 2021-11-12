@@ -34,6 +34,6 @@ public class IntegratorError {
 
 
     public enum ErrorType {
-        BRAND, PRODUCT, ORDER, CATEGORY, IMPORT;
+        BRAND, PRODUCT, ORDER, CATEGORY, IMPORT, SYNCHRONIZING;
     }
 }
