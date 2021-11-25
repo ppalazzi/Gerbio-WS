@@ -50,7 +50,7 @@ public class MapperConfig {
                     @Override
                     public void mapAtoB(Product product, AnyProduct anyProduct, MappingContext context) {
                         super.mapAtoB(product, anyProduct, context);
-                        double price = (product.getPrecio() * product.getIvaPct()) + product.getPrecio();
+                        double price = product.getPrecio();
                         BigDecimal bd = new BigDecimal(price).setScale(2, RoundingMode.HALF_UP);
 
                         anyProduct.getSkus().iterator().next().setSellPrice(bd.doubleValue());
