@@ -3,6 +3,7 @@ package com.palazzisoft.gerbio.integrator.service.anymarket;
 import com.palazzisoft.gerbio.integrator.exception.GerbioException;
 import com.palazzisoft.gerbio.integrator.model.IntegratorError;
 import com.palazzisoft.gerbio.integrator.model.anymarket.AnyCategory;
+import com.palazzisoft.gerbio.integrator.model.anymarket.AnyOrigin;
 import com.palazzisoft.gerbio.integrator.repository.CategoryRepository;
 import com.palazzisoft.gerbio.integrator.response.CategoryResponse;
 import com.palazzisoft.gerbio.integrator.service.IntegratorErrorService;
@@ -62,6 +63,7 @@ public class CategoryService extends AbstractService<AnyCategory> {
                     categoryRepository.save(retrievedFromAny);
                 }
             }
+
         }
         catch (Exception e) {
             integratorErrorService.saveError(IntegratorError.builder()
@@ -129,5 +131,14 @@ public class CategoryService extends AbstractService<AnyCategory> {
 
     public List<AnyCategory> findAll() {
         return categoryRepository.findAll();
+    }
+
+    public void storeGerbioCategories() {
+        categoryRepository.save(AnyCategory.builder().id(0L).definitionPriceScope("SKU").name("Varios").partnerId("VS").build());
+        categoryRepository.save(AnyCategory.builder().id(1L).definitionPriceScope("SKU").name("Componentes y accesorios de PC").partnerId("CAPC").build());
+        categoryRepository.save(AnyCategory.builder().id(2L).definitionPriceScope("SKU").name("Impresoras, Plotters y Scanners").partnerId("IPS").build());
+        categoryRepository.save(AnyCategory.builder().id(3L).definitionPriceScope("SKU").name("Servidores, Conectividad y Seguridad").partnerId("SCS").build());
+        categoryRepository.save(AnyCategory.builder().id(4L).definitionPriceScope("SKU").name("Notebooks, Pc, All in One y Tablets").partnerId("NPAT").build());
+        categoryRepository.save(AnyCategory.builder().id(5L).definitionPriceScope("SKU").name("Monitores").partnerId("MT").build());
     }
 }
