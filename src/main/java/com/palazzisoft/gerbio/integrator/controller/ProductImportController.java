@@ -13,6 +13,7 @@ import com.palazzisoft.gerbio.integrator.service.anymarket.BrandService;
 import com.palazzisoft.gerbio.integrator.service.anymarket.CategoryService;
 import com.palazzisoft.gerbio.integrator.service.anymarket.ProductService;
 import com.palazzisoft.gerbio.integrator.service.mg.MGWebService;
+import com.palazzisoft.gerbio.integrator.util.CSVCategoryReader;
 import lombok.extern.slf4j.Slf4j;
 import ma.glasnost.orika.MapperFacade;
 import org.springframework.context.annotation.Profile;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -40,22 +42,40 @@ public class ProductImportController {
     private final MGWebService mgWebService;
     private final MapperFacade mapper;
     private final IntegratorErrorService integratorErrorService;
+    private final CSVCategoryReader csvCategoryReader;
+    private List<String> variosCsv = new ArrayList<>();
+    private List<String> componentesPCCsv = new ArrayList<>();
+    private List<String> impresorasCsv = new ArrayList<>();
+    private List<String> monitoresCsv = new ArrayList<>();
+    private List<String> notebooksCsv = new ArrayList<>();
+    private List<String> servidoresCsv = new ArrayList<>();
+
 
     public ProductImportController(final CategoryService categoryService, final BrandService brandService,
                                    final ProductService productService, final MGWebService mgWebService,
-                                   final MapperFacade mapperFacade, final IntegratorErrorService integratorErrorService) {
+                                   final MapperFacade mapperFacade, final IntegratorErrorService integratorErrorService) throws IOException {
         this.categoryService = categoryService;
         this.productService = productService;
         this.brandService = brandService;
         this.mgWebService = mgWebService;
         this.mapper = mapperFacade;
         this.integratorErrorService = integratorErrorService;
+        csvCategoryReader = new CSVCategoryReader();
+
     }
 
     @GetMapping
     @Scheduled(fixedDelay = 3600000, initialDelay = 3600000)
-    public ResponseEntity<List<AnyProduct>> importProducts() throws GerbioException {
+    public ResponseEntity<List<AnyProduct>> importProducts() throws GerbioException, IOException {
         log.info("Starting importing Product at {} ", Instant.now());
+
+        variosCsv = csvCategoryReader.readVariosCSV();
+        componentesPCCsv = csvCategoryReader.readComponentesCSV();
+        impresorasCsv = csvCategoryReader.readImpresorasCSV();
+        monitoresCsv = csvCategoryReader.readMonitoresCSV();
+        notebooksCsv = csvCategoryReader.readNotebooksCSV();
+        servidoresCsv = csvCategoryReader.readServidoresCSV();
+
 
         // retrieving all products from MG and DB
         List<AnyProduct> products = retrieveProductsFromMG();
@@ -102,7 +122,23 @@ public class ProductImportController {
                 log.debug("Brands and Category found");
 
                 mgProduct.setBrand(currentBrand.get());
-                mgProduct.setCategory(currentCategory.get());
+
+                if (variosCsv.contains(currentCategory.get().getId().toString())) {
+                    mgProduct.setCategory(findCategoryByPartnerId(categories, "VS").get());
+                } else if (componentesPCCsv.contains(currentCategory.get().getId().toString())) {
+                    mgProduct.setCategory(findCategoryByPartnerId(categories, "CAPC").get());
+                } else if (impresorasCsv.contains(currentCategory.get().getId().toString())) {
+                    mgProduct.setCategory(findCategoryByPartnerId(categories, "IPS").get());
+                } else if (servidoresCsv.contains(currentCategory.get().getId().toString())) {
+                    mgProduct.setCategory(findCategoryByPartnerId(categories, "SCS").get());
+                } else if (notebooksCsv.contains(currentCategory.get().getId().toString())) {
+                    mgProduct.setCategory(findCategoryByPartnerId(categories, "NPAT").get());
+                } else if (monitoresCsv.contains(currentCategory.get().getId().toString())) {
+                    mgProduct.setCategory(findCategoryByPartnerId(categories, "MT").get());
+                } else {
+                    mgProduct.setCategory(currentCategory.get());
+                }
+
                 importSingleProduct(mgProduct);
             } else {
                 log.info("Brand or category not found, will synchronize again {} {} ", currentBrand, currentCategory);
