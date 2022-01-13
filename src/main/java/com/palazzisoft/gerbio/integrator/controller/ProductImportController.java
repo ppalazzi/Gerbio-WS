@@ -61,7 +61,6 @@ public class ProductImportController {
         this.mapper = mapperFacade;
         this.integratorErrorService = integratorErrorService;
         csvCategoryReader = new CSVCategoryReader();
-
     }
 
     @GetMapping
@@ -75,7 +74,6 @@ public class ProductImportController {
         monitoresCsv = csvCategoryReader.readMonitoresCSV();
         notebooksCsv = csvCategoryReader.readNotebooksCSV();
         servidoresCsv = csvCategoryReader.readServidoresCSV();
-
 
         // retrieving all products from MG and DB
         List<AnyProduct> products = retrieveProductsFromMG();
@@ -124,17 +122,17 @@ public class ProductImportController {
                 mgProduct.setBrand(currentBrand.get());
 
                 if (variosCsv.contains(currentCategory.get().getId().toString())) {
-                    mgProduct.setCategory(findCategoryByPartnerId(categories, "VS").get());
+                    mgProduct.setCategory(findCategoryByPartnerId(categories, "GER_VS").get());
                 } else if (componentesPCCsv.contains(currentCategory.get().getId().toString())) {
-                    mgProduct.setCategory(findCategoryByPartnerId(categories, "CAPC").get());
+                    mgProduct.setCategory(findCategoryByPartnerId(categories, "GER_CAPC").get());
                 } else if (impresorasCsv.contains(currentCategory.get().getId().toString())) {
-                    mgProduct.setCategory(findCategoryByPartnerId(categories, "IPS").get());
+                    mgProduct.setCategory(findCategoryByPartnerId(categories, "GER_IPS").get());
                 } else if (servidoresCsv.contains(currentCategory.get().getId().toString())) {
-                    mgProduct.setCategory(findCategoryByPartnerId(categories, "SCS").get());
+                    mgProduct.setCategory(findCategoryByPartnerId(categories, "GER_SCS").get());
                 } else if (notebooksCsv.contains(currentCategory.get().getId().toString())) {
-                    mgProduct.setCategory(findCategoryByPartnerId(categories, "NPAT").get());
+                    mgProduct.setCategory(findCategoryByPartnerId(categories, "GER_NPAT").get());
                 } else if (monitoresCsv.contains(currentCategory.get().getId().toString())) {
-                    mgProduct.setCategory(findCategoryByPartnerId(categories, "MT").get());
+                    mgProduct.setCategory(findCategoryByPartnerId(categories, "GER_MT").get());
                 } else {
                     mgProduct.setCategory(currentCategory.get());
                 }

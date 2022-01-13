@@ -64,7 +64,6 @@ public class IntegratorRunner implements ApplicationRunner {
             List<AnyCategory> categories = categoryService.getAll();
             categoryService.saveCategories(categories);
             categoryService.synchronizeCategories();
-            categoryService.storeGerbioCategories();
 
             List<AnyCategory> categoriesAfterSync = categoryService.findAll();
 
@@ -72,17 +71,17 @@ public class IntegratorRunner implements ApplicationRunner {
 
             for (AnyProduct product : products) {
                 if (variosCsv.contains(product.getCategory().getId().toString())) {
-                    product.setCategory(findCategoryByPartnerId(categoriesAfterSync, "VS").get());
+                    product.setCategory(findCategoryByPartnerId(categoriesAfterSync, "GER_VS").get());
                 } else if (componentesPCCsv.contains(product.getCategory().getId().toString())) {
-                    product.setCategory(findCategoryByPartnerId(categoriesAfterSync, "CAPC").get());
+                    product.setCategory(findCategoryByPartnerId(categoriesAfterSync, "GER_CAPC").get());
                 } else if (impresorasCsv.contains(product.getCategory().getId().toString())) {
-                    product.setCategory(findCategoryByPartnerId(categoriesAfterSync, "IPS").get());
+                    product.setCategory(findCategoryByPartnerId(categoriesAfterSync, "GER_IPS").get());
                 } else if (servidoresCsv.contains(product.getCategory().getId().toString())) {
-                    product.setCategory(findCategoryByPartnerId(categoriesAfterSync, "SCS").get());
+                    product.setCategory(findCategoryByPartnerId(categoriesAfterSync, "GER_SCS").get());
                 } else if (notebooksCsv.contains(product.getCategory().getId().toString())) {
-                    product.setCategory(findCategoryByPartnerId(categoriesAfterSync, "NPAT").get());
+                    product.setCategory(findCategoryByPartnerId(categoriesAfterSync, "GER_NPAT").get());
                 } else if (monitoresCsv.contains(product.getCategory().getId().toString())) {
-                    product.setCategory(findCategoryByPartnerId(categoriesAfterSync, "MT").get());
+                    product.setCategory(findCategoryByPartnerId(categoriesAfterSync, "GER_MT").get());
                 }
             }
 

@@ -133,12 +133,5 @@ public class CategoryService extends AbstractService<AnyCategory> {
         return categoryRepository.findAll();
     }
 
-    public void storeGerbioCategories() {
-        categoryRepository.save(AnyCategory.builder().id(0L).definitionPriceScope("SKU").name("Varios").partnerId("VS").build());
-        categoryRepository.save(AnyCategory.builder().id(1L).definitionPriceScope("SKU").name("Componentes y accesorios de PC").partnerId("CAPC").build());
-        categoryRepository.save(AnyCategory.builder().id(2L).definitionPriceScope("SKU").name("Impresoras, Plotters y Scanners").partnerId("IPS").build());
-        categoryRepository.save(AnyCategory.builder().id(3L).definitionPriceScope("SKU").name("Servidores, Conectividad y Seguridad").partnerId("SCS").build());
-        categoryRepository.save(AnyCategory.builder().id(4L).definitionPriceScope("SKU").name("Notebooks, Pc, All in One y Tablets").partnerId("NPAT").build());
-        categoryRepository.save(AnyCategory.builder().id(5L).definitionPriceScope("SKU").name("Monitores").partnerId("MT").build());
-    }
+
 }
