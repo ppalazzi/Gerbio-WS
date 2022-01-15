@@ -103,12 +103,14 @@ public class ProductImportController {
         if (baseEquivalent.isPresent()) {
             AnyProduct baseProduct = baseEquivalent.get();
 
-            // if price or stock has changed, update DB and Anymarket
+            // if price, category or stock has changed, update DB and Anymarket
             if (baseProduct.getSkus().get(0).getPrice() != mgProduct.getSkus().get(0).getPrice()
-                    || baseProduct.getSkus().get(0).getAmount() != mgProduct.getSkus().get(0).getAmount()) {
+                    || baseProduct.getSkus().get(0).getAmount() != mgProduct.getSkus().get(0).getAmount()
+                    || !baseProduct.getCategory().getId().equals(mgProduct.getCategory().getId())) {
                 baseProduct.getSkus().get(0).setAmount(mgProduct.getSkus().get(0).getAmount());
                 baseProduct.getSkus().get(0).setPrice(mgProduct.getSkus().get(0).getPrice());
                 baseProduct.getSkus().get(0).setSellPrice(mgProduct.getSkus().get(0).getPrice());
+                baseProduct.setCategory(mgProduct.getCategory());
                 productService.updateAndPersist(baseProduct);
             }
         } else {
