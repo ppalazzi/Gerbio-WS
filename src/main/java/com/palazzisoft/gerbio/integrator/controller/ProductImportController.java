@@ -1,5 +1,6 @@
 package com.palazzisoft.gerbio.integrator.controller;
 
+import com.palazzisoft.gerbio.integrator.catalogo.Category;
 import com.palazzisoft.gerbio.integrator.catalogo.ProductsRequest;
 import com.palazzisoft.gerbio.integrator.exception.GerbioException;
 import com.palazzisoft.gerbio.integrator.mapping.ItemToAnyProductMapper;
@@ -75,8 +76,6 @@ public class ProductImportController {
         notebooksCsv = csvCategoryReader.readNotebooksCSV();
         servidoresCsv = csvCategoryReader.readServidoresCSV();
 
-        log.info("Está vaciosCsv instanciado? " + variosCsv.toString());
-
         // retrieving all products from MG and DB
         List<AnyProduct> products = retrieveProductsFromMG();
         List<AnyProduct> currentDBProducts = productService.getAll();
@@ -136,20 +135,19 @@ public class ProductImportController {
     }
 
     private void adjustCategoriesAsGerbioRequest(List<AnyCategory> categories, AnyProduct mgProduct, Optional<AnyCategory> currentCategory) {
-        log.info("varios CSV : " + variosCsv.toString());
-        log.info("Current category " + currentCategory.isPresent() + " - " + currentCategory.get());
+        AnyCategory partnerCategory = findCategoryByPartnerId(categories, currentCategory.get().getPartnerId()).get();
 
-        if (variosCsv.contains(currentCategory.get().getId().toString())) {
+        if (variosCsv.contains(partnerCategory.getId().toString())) {
             mgProduct.setCategory(findCategoryByPartnerId(categories, "GER_VS").get());
-        } else if (componentesPCCsv.contains(currentCategory.get().getId().toString())) {
+        } else if (componentesPCCsv.contains(partnerCategory.getId().toString())) {
             mgProduct.setCategory(findCategoryByPartnerId(categories, "GER_CAPC").get());
-        } else if (impresorasCsv.contains(currentCategory.get().getId().toString())) {
+        } else if (impresorasCsv.contains(partnerCategory.getId().toString())) {
             mgProduct.setCategory(findCategoryByPartnerId(categories, "GER_IPS").get());
-        } else if (servidoresCsv.contains(currentCategory.get().getId().toString())) {
+        } else if (servidoresCsv.contains(partnerCategory.getId().toString())) {
             mgProduct.setCategory(findCategoryByPartnerId(categories, "GER_SCS").get());
-        } else if (notebooksCsv.contains(currentCategory.get().getId().toString())) {
+        } else if (notebooksCsv.contains(partnerCategory.getId().toString())) {
             mgProduct.setCategory(findCategoryByPartnerId(categories, "GER_NPAT").get());
-        } else if (monitoresCsv.contains(currentCategory.get().getId().toString())) {
+        } else if (monitoresCsv.contains(partnerCategory.getId().toString())) {
             mgProduct.setCategory(findCategoryByPartnerId(categories, "GER_MT").get());
         } else {
             mgProduct.setCategory(currentCategory.get());
