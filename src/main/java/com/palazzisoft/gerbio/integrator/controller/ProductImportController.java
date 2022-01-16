@@ -75,6 +75,8 @@ public class ProductImportController {
         notebooksCsv = csvCategoryReader.readNotebooksCSV();
         servidoresCsv = csvCategoryReader.readServidoresCSV();
 
+        log.info("Está vaciosCsv instanciado? " + variosCsv.toString());
+
         // retrieving all products from MG and DB
         List<AnyProduct> products = retrieveProductsFromMG();
         List<AnyProduct> currentDBProducts = productService.getAll();
@@ -134,6 +136,9 @@ public class ProductImportController {
     }
 
     private void adjustCategoriesAsGerbioRequest(List<AnyCategory> categories, AnyProduct mgProduct, Optional<AnyCategory> currentCategory) {
+        log.info("varios CSV : " + variosCsv.toString());
+        log.info("Current category " + currentCategory.isPresent() + " - " + currentCategory.get());
+
         if (variosCsv.contains(currentCategory.get().getId().toString())) {
             mgProduct.setCategory(findCategoryByPartnerId(categories, "GER_VS").get());
         } else if (componentesPCCsv.contains(currentCategory.get().getId().toString())) {
