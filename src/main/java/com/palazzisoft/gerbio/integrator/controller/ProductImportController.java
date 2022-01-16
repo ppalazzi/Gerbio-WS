@@ -100,13 +100,16 @@ public class ProductImportController {
         Optional<AnyProduct> baseEquivalent = currentDBProducts.stream()
                 .filter(p -> p.getSkus().get(0).getPartnerId().equals(partnerId)).findFirst();
 
+        adjustCategoriesAsGerbioRequest(categories, mgProduct,
+                Optional.of(mgProduct.getCategory()));
+
         if (baseEquivalent.isPresent()) {
             AnyProduct baseProduct = baseEquivalent.get();
 
-            // if price, category or stock has changed, update DB and Anymarket
+            // if price or stock has changed, update DB and Anymarket
             if (baseProduct.getSkus().get(0).getPrice() != mgProduct.getSkus().get(0).getPrice()
                     || baseProduct.getSkus().get(0).getAmount() != mgProduct.getSkus().get(0).getAmount()
-                    || !baseProduct.getCategory().getId().equals(mgProduct.getCategory().getId())) {
+            ) {
                 baseProduct.getSkus().get(0).setAmount(mgProduct.getSkus().get(0).getAmount());
                 baseProduct.getSkus().get(0).setPrice(mgProduct.getSkus().get(0).getPrice());
                 baseProduct.getSkus().get(0).setSellPrice(mgProduct.getSkus().get(0).getPrice());
@@ -120,31 +123,31 @@ public class ProductImportController {
 
             if (currentBrand.isPresent() && currentCategory.isPresent()) {
                 log.debug("Brands and Category found");
-
                 mgProduct.setBrand(currentBrand.get());
-
-                if (variosCsv.contains(currentCategory.get().getId().toString())) {
-                    mgProduct.setCategory(findCategoryByPartnerId(categories, "GER_VS").get());
-                } else if (componentesPCCsv.contains(currentCategory.get().getId().toString())) {
-                    mgProduct.setCategory(findCategoryByPartnerId(categories, "GER_CAPC").get());
-                } else if (impresorasCsv.contains(currentCategory.get().getId().toString())) {
-                    mgProduct.setCategory(findCategoryByPartnerId(categories, "GER_IPS").get());
-                } else if (servidoresCsv.contains(currentCategory.get().getId().toString())) {
-                    mgProduct.setCategory(findCategoryByPartnerId(categories, "GER_SCS").get());
-                } else if (notebooksCsv.contains(currentCategory.get().getId().toString())) {
-                    mgProduct.setCategory(findCategoryByPartnerId(categories, "GER_NPAT").get());
-                } else if (monitoresCsv.contains(currentCategory.get().getId().toString())) {
-                    mgProduct.setCategory(findCategoryByPartnerId(categories, "GER_MT").get());
-                } else {
-                    mgProduct.setCategory(currentCategory.get());
-                }
-
                 importSingleProduct(mgProduct);
             } else {
                 log.info("Brand or category not found, will synchronize again {} {} ", currentBrand, currentCategory);
                 syncronizeBrandsAndProducts();
             }
 
+        }
+    }
+
+    private void adjustCategoriesAsGerbioRequest(List<AnyCategory> categories, AnyProduct mgProduct, Optional<AnyCategory> currentCategory) {
+        if (variosCsv.contains(currentCategory.get().getId().toString())) {
+            mgProduct.setCategory(findCategoryByPartnerId(categories, "GER_VS").get());
+        } else if (componentesPCCsv.contains(currentCategory.get().getId().toString())) {
+            mgProduct.setCategory(findCategoryByPartnerId(categories, "GER_CAPC").get());
+        } else if (impresorasCsv.contains(currentCategory.get().getId().toString())) {
+            mgProduct.setCategory(findCategoryByPartnerId(categories, "GER_IPS").get());
+        } else if (servidoresCsv.contains(currentCategory.get().getId().toString())) {
+            mgProduct.setCategory(findCategoryByPartnerId(categories, "GER_SCS").get());
+        } else if (notebooksCsv.contains(currentCategory.get().getId().toString())) {
+            mgProduct.setCategory(findCategoryByPartnerId(categories, "GER_NPAT").get());
+        } else if (monitoresCsv.contains(currentCategory.get().getId().toString())) {
+            mgProduct.setCategory(findCategoryByPartnerId(categories, "GER_MT").get());
+        } else {
+            mgProduct.setCategory(currentCategory.get());
         }
     }
 
