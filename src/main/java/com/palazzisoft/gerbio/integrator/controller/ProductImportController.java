@@ -107,19 +107,16 @@ public class ProductImportController {
         if (baseEquivalent.isPresent()) {
             AnyProduct baseProduct = baseEquivalent.get();
 
-            log.info("Base category :" + baseProduct.getCategory());
-            log.info("MgProduct category :" + mgProduct.getCategory());
-
             // if price or stock has changed, update DB and Anymarket
             if (baseProduct.getSkus().get(0).getPrice() != mgProduct.getSkus().get(0).getPrice()
                     || baseProduct.getSkus().get(0).getAmount() != mgProduct.getSkus().get(0).getAmount()
-                    || !baseProduct.getCategory().getPartnerId().equals(mgProduct.getCategory().getPartnerId())
+                    || !baseProduct.getCategory().getId().equals(mgProduct.getCategory().getId())
             ) {
                 baseProduct.getSkus().get(0).setAmount(mgProduct.getSkus().get(0).getAmount());
                 baseProduct.getSkus().get(0).setPrice(mgProduct.getSkus().get(0).getPrice());
                 baseProduct.getSkus().get(0).setSellPrice(mgProduct.getSkus().get(0).getPrice());
 
-                baseProduct.setCategory(mgProduct.getCategory());
+                baseProduct.setCategory(findCategoryById(categories, mgProduct.getCategory().getId()).get());
 
                 productService.updateAndPersist(baseProduct);
             }
@@ -131,6 +128,7 @@ public class ProductImportController {
             if (currentBrand.isPresent() && currentCategory.isPresent()) {
                 log.debug("Brands and Category found");
                 mgProduct.setBrand(currentBrand.get());
+                mgProduct.setCategory(currentCategory.get());
                 importSingleProduct(mgProduct);
             } else {
                 log.info("Brand or category not found, will synchronize again {} {} ", currentBrand, currentCategory);
@@ -233,5 +231,9 @@ public class ProductImportController {
 
     private Optional<AnyCategory> findCategoryByPartnerId(List<AnyCategory> category, String partnerId) {
         return category.stream().filter(c -> c.getPartnerId().equals(partnerId)).findFirst();
+    }
+
+    private Optional<AnyCategory> findCategoryById(List<AnyCategory> category, Long id) {
+        return category.stream().filter(c -> c.getId().equals(id)).findFirst();
     }
 }
