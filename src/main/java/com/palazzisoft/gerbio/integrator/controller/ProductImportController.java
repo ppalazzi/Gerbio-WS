@@ -85,9 +85,7 @@ public class ProductImportController {
 
 
         for (AnyProduct mgProduct : products) {
-            if (mgProduct.getSkus().get(0).getAmount() > 0d) {
-                importProduct(currentDBProducts, brands, categories, mgProduct);
-            }
+            importProduct(currentDBProducts, brands, categories, mgProduct);
         }
 
         log.info("Product importation of {} items, run succesfully", products.size());
@@ -111,10 +109,13 @@ public class ProductImportController {
                     || baseProduct.getSkus().get(0).getAmount() != mgProduct.getSkus().get(0).getAmount()
                     || !baseProduct.getCategory().getId().equals(mgProduct.getCategory().getId())
             ) {
-                baseProduct.getSkus().get(0).setAmount(mgProduct.getSkus().get(0).getAmount());
-                baseProduct.getSkus().get(0).setPrice(mgProduct.getSkus().get(0).getPrice());
+                if (mgProduct.getSkus().get(0).getAmount() > 0d) {
+                    baseProduct.getSkus().get(0).setAmount(mgProduct.getSkus().get(0).getAmount());
+                } else {
+                    baseProduct.getSkus().get(0).setAmount(0d);
+                }
+                
                 baseProduct.getSkus().get(0).setSellPrice(mgProduct.getSkus().get(0).getPrice());
-
                 baseProduct.setCategory(findCategoryById(categories, mgProduct.getCategory().getId()).get());
 
                 productService.updateAndPersist(baseProduct);
