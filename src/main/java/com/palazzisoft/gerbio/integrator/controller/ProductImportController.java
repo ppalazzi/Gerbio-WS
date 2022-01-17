@@ -107,6 +107,9 @@ public class ProductImportController {
         if (baseEquivalent.isPresent()) {
             AnyProduct baseProduct = baseEquivalent.get();
 
+            log.info("Base category :" + baseProduct.getCategory());
+            log.info("MgProduct category :" + mgProduct.getCategory());
+
             // if price or stock has changed, update DB and Anymarket
             if (baseProduct.getSkus().get(0).getPrice() != mgProduct.getSkus().get(0).getPrice()
                     || baseProduct.getSkus().get(0).getAmount() != mgProduct.getSkus().get(0).getAmount()
