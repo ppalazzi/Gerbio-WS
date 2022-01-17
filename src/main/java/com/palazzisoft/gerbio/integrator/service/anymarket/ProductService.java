@@ -128,6 +128,7 @@ public class ProductService extends AbstractService<AnyProduct> {
                     .build();
 
             stockService.update(Arrays.asList(stock));
+            update(anyProduct, anyProduct.getId());
 
             anyProduct = productRepository.save(anyProduct);
 
