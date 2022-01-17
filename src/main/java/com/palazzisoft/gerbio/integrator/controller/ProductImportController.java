@@ -44,12 +44,12 @@ public class ProductImportController {
     private final MapperFacade mapper;
     private final IntegratorErrorService integratorErrorService;
     private final CSVCategoryReader csvCategoryReader;
-    private List<String> variosCsv = new ArrayList<>();
-    private List<String> componentesPCCsv = new ArrayList<>();
-    private List<String> impresorasCsv = new ArrayList<>();
-    private List<String> monitoresCsv = new ArrayList<>();
-    private List<String> notebooksCsv = new ArrayList<>();
-    private List<String> servidoresCsv = new ArrayList<>();
+    private List<String> variosCsv;
+    private List<String> componentesPCCsv;
+    private List<String> impresorasCsv;
+    private List<String> monitoresCsv;
+    private List<String> notebooksCsv;
+    private List<String> servidoresCsv;
 
 
     public ProductImportController(final CategoryService categoryService, final BrandService brandService,
@@ -62,19 +62,18 @@ public class ProductImportController {
         this.mapper = mapperFacade;
         this.integratorErrorService = integratorErrorService;
         csvCategoryReader = new CSVCategoryReader();
-    }
-
-    @GetMapping
-    @Scheduled(fixedDelay = 3600000, initialDelay = 3600000)
-    public ResponseEntity<List<AnyProduct>> importProducts() throws GerbioException, IOException {
-        log.info("Starting importing Product at {} ", Instant.now());
-
         variosCsv = csvCategoryReader.readVariosCSV();
         componentesPCCsv = csvCategoryReader.readComponentesCSV();
         impresorasCsv = csvCategoryReader.readImpresorasCSV();
         monitoresCsv = csvCategoryReader.readMonitoresCSV();
         notebooksCsv = csvCategoryReader.readNotebooksCSV();
         servidoresCsv = csvCategoryReader.readServidoresCSV();
+    }
+
+    @GetMapping
+    @Scheduled(fixedDelay = 3600000, initialDelay = 3600000)
+    public ResponseEntity<List<AnyProduct>> importProducts() throws GerbioException, IOException {
+        log.info("Starting importing Product at {} ", Instant.now());
 
         // retrieving all products from MG and DB
         List<AnyProduct> products = retrieveProductsFromMG();
