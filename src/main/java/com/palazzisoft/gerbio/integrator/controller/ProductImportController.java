@@ -5,14 +5,13 @@ import com.palazzisoft.gerbio.integrator.catalogo.ProductsRequest;
 import com.palazzisoft.gerbio.integrator.exception.GerbioException;
 import com.palazzisoft.gerbio.integrator.mapping.ItemToAnyProductMapper;
 import com.palazzisoft.gerbio.integrator.model.IntegratorError;
-import com.palazzisoft.gerbio.integrator.model.anymarket.AnyBrand;
-import com.palazzisoft.gerbio.integrator.model.anymarket.AnyCategory;
-import com.palazzisoft.gerbio.integrator.model.anymarket.AnyProduct;
+import com.palazzisoft.gerbio.integrator.model.anymarket.*;
 import com.palazzisoft.gerbio.integrator.model.mg.Item;
 import com.palazzisoft.gerbio.integrator.service.IntegratorErrorService;
 import com.palazzisoft.gerbio.integrator.service.anymarket.BrandService;
 import com.palazzisoft.gerbio.integrator.service.anymarket.CategoryService;
 import com.palazzisoft.gerbio.integrator.service.anymarket.ProductService;
+import com.palazzisoft.gerbio.integrator.service.anymarket.StockService;
 import com.palazzisoft.gerbio.integrator.service.mg.MGWebService;
 import com.palazzisoft.gerbio.integrator.util.CSVCategoryReader;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +27,7 @@ import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,6 +40,7 @@ public class ProductImportController {
     private final CategoryService categoryService;
     private final BrandService brandService;
     private final ProductService productService;
+    private final StockService stockService;
     private final MGWebService mgWebService;
     private final MapperFacade mapper;
     private final IntegratorErrorService integratorErrorService;
@@ -53,10 +54,12 @@ public class ProductImportController {
 
 
     public ProductImportController(final CategoryService categoryService, final BrandService brandService,
-                                   final ProductService productService, final MGWebService mgWebService,
-                                   final MapperFacade mapperFacade, final IntegratorErrorService integratorErrorService) throws IOException {
+                                   final ProductService productService, final StockService stockService,
+                                   final MGWebService mgWebService, final MapperFacade mapperFacade,
+                                   IntegratorErrorService integratorErrorService) throws IOException {
         this.categoryService = categoryService;
         this.productService = productService;
+        this.stockService = stockService;
         this.brandService = brandService;
         this.mgWebService = mgWebService;
         this.mapper = mapperFacade;
@@ -88,9 +91,33 @@ public class ProductImportController {
             importProduct(currentDBProducts, brands, categories, mgProduct);
         }
 
+        updateStockOfMissingProducts(currentDBProducts, products);
+
         log.info("Product importation of {} items, run succesfully", products.size());
 
         return ResponseEntity.ok(products);
+    }
+
+    private void updateStockOfMissingProducts(List<AnyProduct> currentDBProducts, List<AnyProduct> products) {
+        for (AnyProduct productFromMG : products) {
+            final String partnerId = productFromMG.getSkus().get(0).getPartnerId();
+
+            Optional<AnyProduct> baseEquivalent = currentDBProducts.stream()
+                    .filter(p -> p.getSkus().get(0).getPartnerId().equals(partnerId)).findFirst();
+
+            if (baseEquivalent.isEmpty()) {
+                log.info("Updating stock of partnerId {} to 0", partnerId);
+                AnySku skuFromMG = productFromMG.getSkus().get(0);
+                AnyStock stock = AnyStock.builder()
+                        .id(skuFromMG.getId())
+                        .partnerId(skuFromMG.getPartnerId())
+                        .quantity(0)
+                        .cost(skuFromMG.getPrice())
+                        .build();
+
+                stockService.update(List.of(stock));
+            }
+        }
     }
 
     private void importProduct(List<AnyProduct> currentDBProducts, List<AnyBrand> brands, List<AnyCategory> categories, AnyProduct mgProduct) {
