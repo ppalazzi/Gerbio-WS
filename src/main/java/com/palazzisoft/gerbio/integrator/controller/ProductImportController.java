@@ -99,23 +99,16 @@ public class ProductImportController {
     }
 
     private void updateStockOfMissingProducts(List<AnyProduct> currentDBProducts, List<AnyProduct> products) {
-        for (AnyProduct productFromMG : products) {
-            final String partnerId = productFromMG.getSkus().get(0).getPartnerId();
+        for (AnyProduct productFromBase : currentDBProducts) {
+            final String partnerId = productFromBase.getSkus().get(0).getPartnerId();
 
-            Optional<AnyProduct> baseEquivalent = currentDBProducts.stream()
+            Optional<AnyProduct> mgProduct = products.stream()
                     .filter(p -> p.getSkus().get(0).getPartnerId().equals(partnerId)).findFirst();
 
-            if (baseEquivalent.isEmpty()) {
+            if (!mgProduct.isPresent()) {
                 log.info("Updating stock of partnerId {} to 0", partnerId);
-                AnySku skuFromMG = productFromMG.getSkus().get(0);
-                AnyStock stock = AnyStock.builder()
-                        .id(skuFromMG.getId())
-                        .partnerId(skuFromMG.getPartnerId())
-                        .quantity(0)
-                        .cost(skuFromMG.getPrice())
-                        .build();
-
-                stockService.update(List.of(stock));
+                productFromBase.getSkus().get(0).setAmount(0);
+                productService.updateAndPersist(productFromBase);
             }
         }
     }
