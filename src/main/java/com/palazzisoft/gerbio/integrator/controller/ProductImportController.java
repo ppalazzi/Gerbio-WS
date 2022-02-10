@@ -109,7 +109,6 @@ public class ProductImportController {
             // if price or stock has changed, update DB and Anymarket
             if (baseProduct.getSkus().get(0).getPrice() != mgProduct.getSkus().get(0).getPrice()
                     || baseProduct.getSkus().get(0).getAmount() != mgProduct.getSkus().get(0).getAmount()
-                    || !baseProduct.getCategory().getId().equals(mgProduct.getCategory().getId())
             ) {
                 if (mgProduct.getSkus().get(0).getAmount() > 0d) {
                     baseProduct.getSkus().get(0).setAmount(mgProduct.getSkus().get(0).getAmount());
@@ -118,8 +117,7 @@ public class ProductImportController {
                 }
                 
                 baseProduct.getSkus().get(0).setSellPrice(mgProduct.getSkus().get(0).getPrice());
-                baseProduct.setCategory(findCategoryById(categories, mgProduct.getCategory().getId()).get());
-
+                baseProduct.setCategory(mgProduct.getCategory());
                 productService.updateAndPersist(baseProduct);
             }
         } else {
@@ -215,7 +213,4 @@ public class ProductImportController {
         return category.stream().filter(c -> c.getPartnerId().equals(partnerId)).findFirst();
     }
 
-    private Optional<AnyCategory> findCategoryById(List<AnyCategory> category, Long id) {
-        return category.stream().filter(c -> c.getId().equals(id)).findFirst();
-    }
 }
