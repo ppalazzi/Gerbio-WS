@@ -117,9 +117,11 @@ public class ProductImportController {
                 } else {
                     baseProduct.getSkus().get(0).setAmount(0d);
                 }
-                
+
                 baseProduct.getSkus().get(0).setSellPrice(mgProduct.getSkus().get(0).getPrice());
-                baseProduct.setCategory(mgProduct.getCategory());
+
+                Optional<AnyCategory> category = findCategoryByPartnerId(categories, mgProduct.getCategory().getPartnerId());
+                category.ifPresent(baseProduct::setCategory);
                 productService.updateAndPersist(baseProduct);
             }
         } else {
