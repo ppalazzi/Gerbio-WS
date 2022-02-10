@@ -1,8 +1,8 @@
 package com.palazzisoft.gerbio.integrator.controller;
 
+import com.palazzisoft.gerbio.integrator.alta.ArrayOfProducto;
 import com.palazzisoft.gerbio.integrator.alta.OPedido;
 import com.palazzisoft.gerbio.integrator.alta.PedidoRequest;
-import com.palazzisoft.gerbio.integrator.alta.ArrayOfProducto;
 import com.palazzisoft.gerbio.integrator.alta.Producto;
 import com.palazzisoft.gerbio.integrator.catalogo.Product;
 import com.palazzisoft.gerbio.integrator.model.IntegratorError;

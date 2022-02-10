@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
 import java.util.HashMap;
-import java.util.Map;
 
 @Configuration
 public class JaxbConfiguration {

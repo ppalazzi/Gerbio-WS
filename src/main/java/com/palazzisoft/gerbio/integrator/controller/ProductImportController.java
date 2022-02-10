@@ -1,11 +1,12 @@
 package com.palazzisoft.gerbio.integrator.controller;
 
-import com.palazzisoft.gerbio.integrator.catalogo.Category;
 import com.palazzisoft.gerbio.integrator.catalogo.ProductsRequest;
 import com.palazzisoft.gerbio.integrator.exception.GerbioException;
 import com.palazzisoft.gerbio.integrator.mapping.ItemToAnyProductMapper;
 import com.palazzisoft.gerbio.integrator.model.IntegratorError;
-import com.palazzisoft.gerbio.integrator.model.anymarket.*;
+import com.palazzisoft.gerbio.integrator.model.anymarket.AnyBrand;
+import com.palazzisoft.gerbio.integrator.model.anymarket.AnyCategory;
+import com.palazzisoft.gerbio.integrator.model.anymarket.AnyProduct;
 import com.palazzisoft.gerbio.integrator.model.mg.Item;
 import com.palazzisoft.gerbio.integrator.service.IntegratorErrorService;
 import com.palazzisoft.gerbio.integrator.service.anymarket.BrandService;
@@ -13,7 +14,6 @@ import com.palazzisoft.gerbio.integrator.service.anymarket.CategoryService;
 import com.palazzisoft.gerbio.integrator.service.anymarket.ProductService;
 import com.palazzisoft.gerbio.integrator.service.anymarket.StockService;
 import com.palazzisoft.gerbio.integrator.service.mg.MGWebService;
-import com.palazzisoft.gerbio.integrator.util.CSVCategoryReader;
 import lombok.extern.slf4j.Slf4j;
 import ma.glasnost.orika.MapperFacade;
 import org.springframework.context.annotation.Profile;
@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,13 +43,6 @@ public class ProductImportController {
     private final MGWebService mgWebService;
     private final MapperFacade mapper;
     private final IntegratorErrorService integratorErrorService;
-    private final CSVCategoryReader csvCategoryReader;
-    private List<String> variosCsv;
-    private List<String> componentesPCCsv;
-    private List<String> impresorasCsv;
-    private List<String> monitoresCsv;
-    private List<String> notebooksCsv;
-    private List<String> servidoresCsv;
 
 
     public ProductImportController(final CategoryService categoryService, final BrandService brandService,
@@ -64,13 +56,6 @@ public class ProductImportController {
         this.mgWebService = mgWebService;
         this.mapper = mapperFacade;
         this.integratorErrorService = integratorErrorService;
-        csvCategoryReader = new CSVCategoryReader();
-        variosCsv = csvCategoryReader.readVariosCSV();
-        componentesPCCsv = csvCategoryReader.readComponentesCSV();
-        impresorasCsv = csvCategoryReader.readImpresorasCSV();
-        monitoresCsv = csvCategoryReader.readMonitoresCSV();
-        notebooksCsv = csvCategoryReader.readNotebooksCSV();
-        servidoresCsv = csvCategoryReader.readServidoresCSV();
     }
 
     @GetMapping
@@ -118,9 +103,6 @@ public class ProductImportController {
         Optional<AnyProduct> baseEquivalent = currentDBProducts.stream()
                 .filter(p -> p.getSkus().get(0).getPartnerId().equals(partnerId)).findFirst();
 
-        adjustCategoriesAsGerbioRequest(categories, mgProduct,
-                Optional.of(mgProduct.getCategory()));
-
         if (baseEquivalent.isPresent()) {
             AnyProduct baseProduct = baseEquivalent.get();
 
@@ -155,26 +137,6 @@ public class ProductImportController {
                 syncronizeBrandsAndProducts();
             }
 
-        }
-    }
-
-    private void adjustCategoriesAsGerbioRequest(List<AnyCategory> categories, AnyProduct mgProduct, Optional<AnyCategory> currentCategory) {
-        AnyCategory partnerCategory = findCategoryByPartnerId(categories, currentCategory.get().getPartnerId()).get();
-
-        if (variosCsv.contains(partnerCategory.getId().toString())) {
-            mgProduct.setCategory(findCategoryByPartnerId(categories, "GER_VS").get());
-        } else if (componentesPCCsv.contains(partnerCategory.getId().toString())) {
-            mgProduct.setCategory(findCategoryByPartnerId(categories, "GER_CAPC").get());
-        } else if (impresorasCsv.contains(partnerCategory.getId().toString())) {
-            mgProduct.setCategory(findCategoryByPartnerId(categories, "GER_IPS").get());
-        } else if (servidoresCsv.contains(partnerCategory.getId().toString())) {
-            mgProduct.setCategory(findCategoryByPartnerId(categories, "GER_SCS").get());
-        } else if (notebooksCsv.contains(partnerCategory.getId().toString())) {
-            mgProduct.setCategory(findCategoryByPartnerId(categories, "GER_NPAT").get());
-        } else if (monitoresCsv.contains(partnerCategory.getId().toString())) {
-            mgProduct.setCategory(findCategoryByPartnerId(categories, "GER_MT").get());
-        } else {
-            mgProduct.setCategory(currentCategory.get());
         }
     }
 

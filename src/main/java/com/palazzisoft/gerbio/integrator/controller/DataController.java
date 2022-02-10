@@ -3,8 +3,6 @@ package com.palazzisoft.gerbio.integrator.controller;
 import com.palazzisoft.gerbio.integrator.catalogo.Product;
 import com.palazzisoft.gerbio.integrator.catalogo.ProductsRequest;
 import com.palazzisoft.gerbio.integrator.exception.GerbioException;
-import com.palazzisoft.gerbio.integrator.model.anymarket.AnyProduct;
-import com.palazzisoft.gerbio.integrator.response.ProductResponse;
 import com.palazzisoft.gerbio.integrator.service.mg.MGWebService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

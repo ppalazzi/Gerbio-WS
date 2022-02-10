@@ -3,7 +3,6 @@ package com.palazzisoft.gerbio.integrator.service.anymarket;
 import com.palazzisoft.gerbio.integrator.exception.GerbioException;
 import com.palazzisoft.gerbio.integrator.model.IntegratorError;
 import com.palazzisoft.gerbio.integrator.model.anymarket.AnyCategory;
-import com.palazzisoft.gerbio.integrator.model.anymarket.AnyOrigin;
 import com.palazzisoft.gerbio.integrator.repository.CategoryRepository;
 import com.palazzisoft.gerbio.integrator.response.CategoryResponse;
 import com.palazzisoft.gerbio.integrator.service.IntegratorErrorService;
