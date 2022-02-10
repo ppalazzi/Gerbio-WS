@@ -28,6 +28,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -106,9 +107,10 @@ public class ProductImportController {
         if (baseEquivalent.isPresent()) {
             AnyProduct baseProduct = baseEquivalent.get();
 
-            // if price or stock has changed, update DB and Anymarket
+            // if price, category or stock has changed, update DB and Anymarket
             if (baseProduct.getSkus().get(0).getPrice() != mgProduct.getSkus().get(0).getPrice()
                     || baseProduct.getSkus().get(0).getAmount() != mgProduct.getSkus().get(0).getAmount()
+                    || !baseProduct.getCategory().getId().equals(mgProduct.getCategory().getId())
             ) {
                 if (mgProduct.getSkus().get(0).getAmount() > 0d) {
                     baseProduct.getSkus().get(0).setAmount(mgProduct.getSkus().get(0).getAmount());
