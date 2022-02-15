@@ -119,7 +119,8 @@ public class ProductImportController {
                 }
 
                 baseProduct.getSkus().get(0).setSellPrice(mgProduct.getSkus().get(0).getPrice());
-
+                baseProduct.getSkus().get(0).setPrice(mgProduct.getSkus().get(0).getPrice());
+                
                 Optional<AnyCategory> category = findCategoryByPartnerId(categories, mgProduct.getCategory().getPartnerId());
                 category.ifPresent(baseProduct::setCategory);
                 productService.updateAndPersist(baseProduct);
