@@ -235,8 +235,14 @@ public class ProductImportController {
     }
 
     private Optional<AnyCategory> findCategoryByPartnerId(List<AnyCategory> category, String partnerId) {
-        List<AnyCategory> list = category.stream().filter(c -> c.getPartnerId().equals(partnerId)).collect(Collectors.toList());
-        return list.isEmpty() ? Optional.empty() : list.stream().findFirst();
+        try {
+            return category.stream().filter(c -> partnerId.equals(c.getPartnerId())).findFirst();
+        }
+        catch (Exception e) {
+            log.error("Fallo el : {} {}", partnerId, category.toString());
+            return Optional.empty();
+        }
     }
+
 
 }
