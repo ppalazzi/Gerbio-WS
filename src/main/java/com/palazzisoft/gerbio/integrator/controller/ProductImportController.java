@@ -74,7 +74,6 @@ public class ProductImportController {
             List<AnyBrand> brands = brandService.findAll();
             List<AnyCategory> categories = categoryService.findAll();
 
-
             for (AnyProduct mgProduct : products) {
                 importProduct(currentDBProducts, brands, categories, mgProduct);
             }
@@ -127,6 +126,7 @@ public class ProductImportController {
             if (baseProduct.getSkus().get(0).getPrice() != mgProduct.getSkus().get(0).getPrice()
                     || baseProduct.getSkus().get(0).getAmount() != mgProduct.getSkus().get(0).getAmount()
                     || !baseProduct.getCategory().getId().equals(currentCategory.get().getId())
+                    || !baseProduct.getBrand().getId().equals(currentBrand.get().getId())
             ) {
                 log.info("PRICE {} - {} = {}", baseProduct.getSkus().get(0).getPrice(), mgProduct.getSkus().get(0).getPrice(),
                         baseProduct.getSkus().get(0).getPrice() == mgProduct.getSkus().get(0).getPrice());
@@ -134,6 +134,8 @@ public class ProductImportController {
                         baseProduct.getSkus().get(0).getAmount() == mgProduct.getSkus().get(0).getAmount());
                 log.info("CATEGORY {} - {} = {}", baseProduct.getCategory().getId(), currentCategory.get().getId(),
                         !baseProduct.getCategory().getId().equals(currentCategory.get().getId()));
+                log.info("BRAND {} - {} = {}", baseProduct.getBrand().getId(), currentBrand.get().getId(),
+                        !baseProduct.getBrand().getId().equals(currentBrand.get().getId()));
 
                 if (mgProduct.getSkus().get(0).getAmount() > 0d) {
                     baseProduct.getSkus().get(0).setAmount(mgProduct.getSkus().get(0).getAmount());
@@ -146,6 +148,7 @@ public class ProductImportController {
                 baseProduct.getSkus().get(0).setPrice(mgProduct.getSkus().get(0).getPrice());
                 
                 currentCategory.ifPresent(baseProduct::setCategory);
+                currentBrand.ifPresent(baseProduct::setBrand);
                 productService.updateAndPersist(baseProduct);
             }
         } else {
