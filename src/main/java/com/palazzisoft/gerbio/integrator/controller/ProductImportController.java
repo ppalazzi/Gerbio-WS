@@ -66,20 +66,27 @@ public class ProductImportController {
 
         // retrieving all products from MG and DB
         List<AnyProduct> products = retrieveProductsFromMG();
-        List<AnyProduct> currentDBProducts = productService.getAll();
 
-        // retriveing brands and product
-        List<AnyBrand> brands = brandService.findAll();
-        List<AnyCategory> categories = categoryService.findAll();
+        try {
+            List<AnyProduct> currentDBProducts = productService.getAll();
+
+            // retriveing brands and product
+            List<AnyBrand> brands = brandService.findAll();
+            List<AnyCategory> categories = categoryService.findAll();
 
 
-        for (AnyProduct mgProduct : products) {
-            importProduct(currentDBProducts, brands, categories, mgProduct);
+            for (AnyProduct mgProduct : products) {
+                importProduct(currentDBProducts, brands, categories, mgProduct);
+            }
+
+            updateStockOfMissingProducts(currentDBProducts, products);
+
+            log.info("Product importation of {} items, run succesfully", products.size());
+        }
+        catch (Exception e) {
+            log.error("Error on scheduling", e);
         }
 
-        updateStockOfMissingProducts(currentDBProducts, products);
-
-        log.info("Product importation of {} items, run succesfully", products.size());
 
         return ResponseEntity.ok(products);
     }
@@ -112,9 +119,17 @@ public class ProductImportController {
                     || baseProduct.getSkus().get(0).getAmount() != mgProduct.getSkus().get(0).getAmount()
                     || !baseProduct.getCategory().getId().equals(mgProduct.getCategory().getId())
             ) {
+                log.info("PRICE {} - {} = {}", baseProduct.getSkus().get(0).getPrice(), mgProduct.getSkus().get(0).getPrice(),
+                        baseProduct.getSkus().get(0).getPrice() == mgProduct.getSkus().get(0).getPrice());
+                log.info("AMOUNT {} - {} = {}", baseProduct.getSkus().get(0).getAmount(), mgProduct.getSkus().get(0).getAmount(),
+                        baseProduct.getSkus().get(0).getAmount() == mgProduct.getSkus().get(0).getAmount());
+                log.info("CATEGORY {} - {} = {}", baseProduct.getCategory().getId(), mgProduct.getCategory().getId(),
+                        !baseProduct.getCategory().getId().equals(mgProduct.getCategory().getId()));
+
                 if (mgProduct.getSkus().get(0).getAmount() > 0d) {
                     baseProduct.getSkus().get(0).setAmount(mgProduct.getSkus().get(0).getAmount());
                 } else {
+                    log.info("partner id {} se setea stock en 0 ", partnerId);
                     baseProduct.getSkus().get(0).setAmount(0d);
                 }
 
