@@ -123,7 +123,7 @@ public class ProductImportController {
                         baseProduct.getSkus().get(0).getPrice() == mgProduct.getSkus().get(0).getPrice());
                 log.info("AMOUNT {} - {} = {}", baseProduct.getSkus().get(0).getAmount(), mgProduct.getSkus().get(0).getAmount(),
                         baseProduct.getSkus().get(0).getAmount() == mgProduct.getSkus().get(0).getAmount());
-                log.info("CATEGORY {} - {} = {}", baseProduct.getCategory().getId(), mgProduct.getCategory().getId(),
+                log.info("CATEGORY {} - {} = {}", baseProduct.getCategory().getId(), mgProduct.getCategory().getPartnerId(),
                         !baseProduct.getCategory().getId().equals(mgProduct.getCategory().getPartnerId()));
 
                 if (mgProduct.getSkus().get(0).getAmount() > 0d) {
