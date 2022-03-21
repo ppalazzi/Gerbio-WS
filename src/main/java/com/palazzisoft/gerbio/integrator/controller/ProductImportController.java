@@ -117,14 +117,14 @@ public class ProductImportController {
             // if price, category or stock has changed, update DB and Anymarket
             if (baseProduct.getSkus().get(0).getPrice() != mgProduct.getSkus().get(0).getPrice()
                     || baseProduct.getSkus().get(0).getAmount() != mgProduct.getSkus().get(0).getAmount()
-                    || !baseProduct.getCategory().getId().equals(mgProduct.getCategory().getId())
+                    || !baseProduct.getCategory().getId().equals(mgProduct.getCategory().getPartnerId())
             ) {
                 log.info("PRICE {} - {} = {}", baseProduct.getSkus().get(0).getPrice(), mgProduct.getSkus().get(0).getPrice(),
                         baseProduct.getSkus().get(0).getPrice() == mgProduct.getSkus().get(0).getPrice());
                 log.info("AMOUNT {} - {} = {}", baseProduct.getSkus().get(0).getAmount(), mgProduct.getSkus().get(0).getAmount(),
                         baseProduct.getSkus().get(0).getAmount() == mgProduct.getSkus().get(0).getAmount());
                 log.info("CATEGORY {} - {} = {}", baseProduct.getCategory().getId(), mgProduct.getCategory().getId(),
-                        !baseProduct.getCategory().getId().equals(mgProduct.getCategory().getId()));
+                        !baseProduct.getCategory().getId().equals(mgProduct.getCategory().getPartnerId()));
 
                 if (mgProduct.getSkus().get(0).getAmount() > 0d) {
                     baseProduct.getSkus().get(0).setAmount(mgProduct.getSkus().get(0).getAmount());
