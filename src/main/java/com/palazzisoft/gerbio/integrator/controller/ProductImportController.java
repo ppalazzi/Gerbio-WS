@@ -111,20 +111,29 @@ public class ProductImportController {
         Optional<AnyProduct> baseEquivalent = currentDBProducts.stream()
                 .filter(p -> p.getSkus().get(0).getPartnerId().equals(partnerId)).findFirst();
 
+        Optional<AnyBrand> currentBrand = findBrandByPartnerId(brands, mgProduct.getBrand().getPartnerId());
+        Optional<AnyCategory> currentCategory = findCategoryByPartnerId(categories, mgProduct.getCategory().getPartnerId());
+
+        if (!currentBrand.isPresent() || !currentCategory.isPresent()) {
+            log.info("Brand or category not found, will synchronize again {} {} ", currentBrand, currentCategory);
+            syncronizeBrandsAndProducts();
+            return;
+        }
+
         if (baseEquivalent.isPresent()) {
             AnyProduct baseProduct = baseEquivalent.get();
 
             // if price, category or stock has changed, update DB and Anymarket
             if (baseProduct.getSkus().get(0).getPrice() != mgProduct.getSkus().get(0).getPrice()
                     || baseProduct.getSkus().get(0).getAmount() != mgProduct.getSkus().get(0).getAmount()
-                    || !baseProduct.getCategory().getId().equals(mgProduct.getCategory().getPartnerId())
+                    || !baseProduct.getCategory().getId().equals(currentCategory.get().getId())
             ) {
                 log.info("PRICE {} - {} = {}", baseProduct.getSkus().get(0).getPrice(), mgProduct.getSkus().get(0).getPrice(),
                         baseProduct.getSkus().get(0).getPrice() == mgProduct.getSkus().get(0).getPrice());
                 log.info("AMOUNT {} - {} = {}", baseProduct.getSkus().get(0).getAmount(), mgProduct.getSkus().get(0).getAmount(),
                         baseProduct.getSkus().get(0).getAmount() == mgProduct.getSkus().get(0).getAmount());
-                log.info("CATEGORY {} - {} = {}", baseProduct.getCategory().getId(), mgProduct.getCategory().getPartnerId(),
-                        !baseProduct.getCategory().getId().equals(mgProduct.getCategory().getPartnerId()));
+                log.info("CATEGORY {} - {} = {}", baseProduct.getCategory().getId(), currentCategory.get().getId(),
+                        !baseProduct.getCategory().getId().equals(currentCategory.get().getId()));
 
                 if (mgProduct.getSkus().get(0).getAmount() > 0d) {
                     baseProduct.getSkus().get(0).setAmount(mgProduct.getSkus().get(0).getAmount());
@@ -136,15 +145,11 @@ public class ProductImportController {
                 baseProduct.getSkus().get(0).setSellPrice(mgProduct.getSkus().get(0).getPrice());
                 baseProduct.getSkus().get(0).setPrice(mgProduct.getSkus().get(0).getPrice());
                 
-                Optional<AnyCategory> category = findCategoryByPartnerId(categories, mgProduct.getCategory().getPartnerId());
-                category.ifPresent(baseProduct::setCategory);
+                currentCategory.ifPresent(baseProduct::setCategory);
                 productService.updateAndPersist(baseProduct);
             }
         } else {
             // add to database and anymarket
-            Optional<AnyBrand> currentBrand = findBrandByPartnerId(brands, mgProduct.getBrand().getPartnerId());
-            Optional<AnyCategory> currentCategory = findCategoryByPartnerId(categories, mgProduct.getCategory().getPartnerId());
-
             if (currentBrand.isPresent() && currentCategory.isPresent()) {
                 log.debug("Brands and Category found");
                 mgProduct.setBrand(currentBrand.get());
@@ -154,7 +159,6 @@ public class ProductImportController {
                 log.info("Brand or category not found, will synchronize again {} {} ", currentBrand, currentCategory);
                 syncronizeBrandsAndProducts();
             }
-
         }
     }
 
