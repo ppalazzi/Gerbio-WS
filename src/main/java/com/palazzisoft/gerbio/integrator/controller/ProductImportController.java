@@ -16,6 +16,7 @@ import com.palazzisoft.gerbio.integrator.service.anymarket.StockService;
 import com.palazzisoft.gerbio.integrator.service.mg.MGWebService;
 import lombok.extern.slf4j.Slf4j;
 import ma.glasnost.orika.MapperFacade;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -30,6 +31,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @RestController
 @RequestMapping(value = "/importing")
@@ -233,10 +236,14 @@ public class ProductImportController {
     }
 
     private Optional<AnyBrand> findBrandByPartnerId(List<AnyBrand> brands, String partnerId) {
+        if (isEmpty(partnerId)) return Optional.empty();
+
         return brands.stream().filter(b -> b.getPartnerId().equals(partnerId)).findFirst();
     }
 
     private Optional<AnyCategory> findCategoryByPartnerId(List<AnyCategory> category, String partnerId) {
+        if (isEmpty(partnerId)) return Optional.empty();
+
         return category.stream().filter(c -> c.getPartnerId().equals(partnerId)).findFirst();
     }
 
