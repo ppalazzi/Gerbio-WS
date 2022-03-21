@@ -113,6 +113,8 @@ public class ProductImportController {
         Optional<AnyProduct> baseEquivalent = currentDBProducts.stream()
                 .filter(p -> p.getSkus().get(0).getPartnerId().equals(partnerId)).findFirst();
 
+        log.info("Importing product with partner ID {} ", partnerId);
+
         Optional<AnyBrand> currentBrand = findBrandByPartnerId(brands, mgProduct.getBrand().getPartnerId());
         Optional<AnyCategory> currentCategory = findCategoryByPartnerId(categories, mgProduct.getCategory().getPartnerId());
 
@@ -131,15 +133,6 @@ public class ProductImportController {
                     || !baseProduct.getCategory().getId().equals(currentCategory.get().getId())
                     || !baseProduct.getBrand().getId().equals(currentBrand.get().getId())
             ) {
-                log.info("PRICE {} - {} = {}", baseProduct.getSkus().get(0).getPrice(), mgProduct.getSkus().get(0).getPrice(),
-                        baseProduct.getSkus().get(0).getPrice() == mgProduct.getSkus().get(0).getPrice());
-                log.info("AMOUNT {} - {} = {}", baseProduct.getSkus().get(0).getAmount(), mgProduct.getSkus().get(0).getAmount(),
-                        baseProduct.getSkus().get(0).getAmount() == mgProduct.getSkus().get(0).getAmount());
-                log.info("CATEGORY {} - {} = {}", baseProduct.getCategory().getId(), currentCategory.get().getId(),
-                        !baseProduct.getCategory().getId().equals(currentCategory.get().getId()));
-                log.info("BRAND {} - {} = {}", baseProduct.getBrand().getId(), currentBrand.get().getId(),
-                        !baseProduct.getBrand().getId().equals(currentBrand.get().getId()));
-
                 if (mgProduct.getSkus().get(0).getAmount() > 0d) {
                     baseProduct.getSkus().get(0).setAmount(mgProduct.getSkus().get(0).getAmount());
                 } else {
